@@ -1,0 +1,21 @@
+{
+  "name": "timelens-nvim",
+  "version": "0.1.0",
+  "description": "Neovim plugin for TimeLens - hover to see human-readable durations",
+  "main": "lua/timelens/init.lua",
+  "scripts": {
+    "bridge": "node bin/bridge.js",
+    "build": "tsc -p tsconfig.bridge.json"
+  },
+  "dependencies": {
+    "@timelens/core": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "@types/node": "^20.0.0"
+  },
+  "peerDependencies": {
+    "neovim": ">=0.5.0",
+    "node": ">=18.0.0"
+  }
+}

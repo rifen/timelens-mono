@@ -1,0 +1,32 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "@typescript-eslint/recommended",
+    "@typescript-eslint/recommended-requiring-type-checking"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "sourceType": "module"
+  },
+  "rules": {
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/prefer-nullish-coalescing": "error",
+    "@typescript-eslint/prefer-optional-chain": "error",
+    "@typescript-eslint/no-floating-promises": "error",
+    "@typescript-eslint/require-array-sort-compare": "error",
+    "@typescript-eslint/unbound-method": "off",
+    "@typescript-eslint/no-misused-promises": "error",
+    "@typescript-eslint/no-non-null-assertion": "error",
+    "no-console": "error",
+    "no-debugger": "error",
+    "prefer-const": "error"
+  },
+  "ignorePatterns": [
+    "node_modules/",
+    "dist/",
+    "*.d.ts"
+  ]
+}

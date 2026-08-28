@@ -1,0 +1,8 @@
+node_modules/
+dist/
+*.vsix
+*.tgz
+*.log
+.DS_Store
+.idea/
+.vscode/

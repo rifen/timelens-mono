@@ -1,0 +1,24 @@
+{
+  "name": "timelens-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "pnpm -r run build",
+    "test": "pnpm -r run test",
+    "lint": "pnpm -r run lint",
+    "package:core": "pnpm --filter @timelens/core run build",
+    "package:vscode": "pnpm --filter timelens-vscode run package",
+    "package:nvim": "pnpm --filter timelens-nvim run build"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "vsce": "^2.15.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}

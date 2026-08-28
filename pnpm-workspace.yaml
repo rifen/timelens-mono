@@ -1,0 +1,5 @@
+packages:
+  - packages/*
+allowBuilds:
+  keytar: true
+  node: true

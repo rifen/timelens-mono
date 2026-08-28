@@ -1,0 +1,21 @@
+# Lua
+*.luarc
+*.luarc.json
+
+# Node.js dependencies (needed for core bridge)
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+.vscode/
+*~
+*.swp
+*.swo
+
+# Build output
+dist/
+bin/

@@ -1,0 +1,37 @@
+# Exclude source maps
+*.map
+*.ts.map
+
+# Exclude test files
+test/
+src/test/
+**/*.test.ts
+
+# Exclude development files
+.mocharc.json
+tsconfig.json
+.eslintignore
+eslintrc.json
+
+# Exclude documentation except README
+!README.md
+!CHANGELOG.md
+!LICENSE
+
+# Include dist
+!dist/**/*
+
+# Exclude everything else
+*
+node_modules/**
+.gitignore
+.gitattributes
+.github
+docs
+**/node_modules/**
+!dist/**/*.js
+!dist/**/*.d.ts
+
+# Exclude monorepo root files
+../../**
+!../../packages/core/dist/**
