@@ -1,10 +1,10 @@
 local M = {}
-local bridge_path = vim.fn.stdpath('data') .. '/plugins/timelens-nvim/bridge.js'
+
+-- Compute the bridge path relative to this file
+local plugin_root = debug.getinfo(1, 'S').source:match('@?(.*/)')
+local bridge_path = plugin_root .. '../bin/bridge.js'
 
 function M.setup()
-  -- Ensure bridge is available (symlink or copy to data directory)
-  M.ensure_bridge()
-  
   local group = vim.api.nvim_create_augroup('TimeLens', { clear = true })
   vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
     group = group,
@@ -12,13 +12,6 @@ function M.setup()
       M.show_duration()
     end
   })
-end
-
-function M.ensure_bridge()
-  -- In real plugin, would install to data dir or use lazy.nvim's root
-  -- For now, assume bridge is in the plugin's bin/ directory
-  local plugin_root = debug.getinfo(1, 'S').source:match('@?(.*/)')
-  bridge_path = plugin_root .. '../bin/bridge.js'
 end
 
 function M.show_duration()
@@ -37,17 +30,17 @@ function M.show_duration()
 
   -- Call Node.js bridge
   local input = vim.fn.json_encode({ token = token, line = line })
-  
+
   vim.fn.jobstart({ 'node', bridge_path }, {
     stdin = 'pipe',
     stdout = 'pipe',
     on_stdout = function(_, data)
       if not data or #data == 0 then return end
-      
+
       local response = vim.fn.json_decode(table.concat(data))
       if response and response.text then
         local virt_text = { { response.text, 'Comment' } }
-        
+
         if response.hint then
           table.insert(virt_text, { ' (' .. response.hint .. ')', 'DiagnosticHint' })
         end
@@ -66,18 +59,19 @@ function M.get_token_at_cursor(line, col)
   -- Find the number at or before cursor position
   local before = line:sub(1, col + 1)
   local after = line:sub(col + 1)
-  
+
   -- Look for number boundaries
   local num_start = before:match('.*()%d')
   local num_end = after:match('%d+()')
-  
+
   if not num_start or not num_end then
     return nil
   end
-  
+
   return line:sub(num_start, col + num_end - 1)
 end
 
 M.namespace = vim.api.nvim_create_namespace('timelens')
+M.bridge_path = bridge_path
 
 return M

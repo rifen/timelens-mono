@@ -6,38 +6,52 @@ TimeLens eliminates the mental math of converting raw numbers (seconds, millisec
 
 ## Requirements
 
-- **Node.js 18+** (for `@timelens/core` bridge)
-- **Neovim 0.5+**
+- **Node.js 18+** (for `@rifen/timelens-core` bridge)
+- **Neovim 0.7+**
 
 ## Installation
 
 ### lazy.nvim
 
 ```lua
-{
+-- ~/.config/nvim/lua/plugins/timelens.lua
+return {
   'rifen/timelens-nvim',
+  version = '^0.1.0',
   event = 'VeryLazy',
-  config = function()
-    require('timelens').setup({
-      format = 'compact',  -- 'compact' | 'verbose' | 'both'
-      context_clues = true,
-      keywords = { 'timeout', 'interval', 'delay', 'duration', 'ttl' }
-    })
-  end
+  keys = {
+    { '<leader>tl', desc = 'TimeLens: toggle' },
+    { '<leader>tr', desc = 'TimeLens: refresh' },
+  },
+  opts = {
+    format = 'compact',
+    context_clues = true,
+  },
+  config = function(_, opts)
+    require('timelens').setup(opts)
+  end,
 }
 ```
 
 ### packer.nvim
 
 ```lua
-use 'rifen/timelens-nvim'
+use {
+  'rifen/timelens-nvim',
+  config = function()
+    require('timelens').setup({
+      format = 'compact',
+      context_clues = true,
+    })
+  end,
+}
 ```
 
 ## How it works
 
 1. On `CursorMoved`, the plugin extracts the token under the cursor
 2. Spawns a Node.js bridge process (`bin/bridge.js`)
-3. Bridge imports `@timelens/core`, runs detection + formatting
+3. Bridge imports `@rifen/timelens-core`, runs detection + formatting
 4. Returns formatted duration as JSON
 5. Plugin renders virtual text with the result
 
@@ -71,3 +85,35 @@ require('timelens').setup({
 2. Move cursor over a number — virtual text appears with converted time
 
 **Works in:** source code, config files (YAML/TOML/JSON), Dockerfiles, k8s manifests, `.env`, docs.
+
+## Lazy.nvim Integration
+
+The plugin is designed to work seamlessly with lazy.nvim:
+
+- **Event loading**: Plugin loads on `VeryLazy` event
+- **Options handling**: Pass config via `opts` key
+- **Key bindings**: Define keys in plugin spec
+- **Lazy loading**: Bridge process only starts when needed
+
+### Complete lazy.nvim Example
+
+```lua
+-- ~/.config/nvim/lua/plugins/timelens.lua
+return {
+  'rifen/timelens-nvim',
+  version = '^0.1.0',
+  event = 'VeryLazy',
+  keys = {
+    { '<leader>tl', desc = 'TimeLens: toggle' },
+    { '<leader>tr', desc = 'TimeLens: refresh' },
+  },
+  opts = {
+    format = 'compact',
+    context_clues = true,
+    keywords = { 'timeout', 'interval', 'delay', 'ttl' },
+  },
+  config = function(_, opts)
+    require('timelens').setup(opts)
+  end,
+}
+```

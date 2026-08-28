@@ -1,0 +1,62 @@
+-- Example lazy.nvim configuration for TimeLens
+-- Add this to your Lazy.nvim setup in ~/.config/nvim/lua/plugins/timelens.lua
+
+return {
+  -- TimeLens: hover to see human-readable durations
+  'rifen/timelens-nvim',
+  version = '^0.1.0',
+  dependencies = {
+    -- Optional: plenary.nvim for enhanced job control
+    'nvim-lua/plenary.nvim',
+  },
+  opts = {
+    -- Output format: 'compact', 'verbose', or 'both'
+    format = 'compact',
+
+    -- Default unit when no context available
+    default_unit = 'seconds',
+
+    -- Value boundaries (in milliseconds)
+    min_value = 1,
+    max_value = 31557600000, -- ~1 year in milliseconds
+
+    -- Enable context-aware detection
+    context_clues = true,
+
+    -- Show breakdown (e.g., "1 day" vs "1d")
+    show_breakdown = false,
+
+    -- Show unit label (e.g., "1 day" vs "1")
+    show_unit_label = true,
+  },
+
+  -- Optional keybindings
+  keys = {
+    {
+      '<leader>tl',
+      function()
+        -- Toggle TimeLens on/off
+        local state = vim.g.timelens_enabled
+        vim.g.timelens_enabled = not state
+        vim.notify(
+          'TimeLens ' .. (not state and 'enabled' or 'disabled'),
+          state and 'warn' or 'info'
+        )
+      end,
+      desc = 'TimeLens: toggle hover',
+    },
+    {
+      '<leader>tr',
+      function()
+        -- Force refresh hover on current line
+        require('timelens.hover').show_duration()
+      end,
+      desc = 'TimeLens: refresh hover',
+    },
+  },
+
+  -- Configuration
+  config = function(_, opts)
+    require('timelens').setup(opts)
+  end,
+}
