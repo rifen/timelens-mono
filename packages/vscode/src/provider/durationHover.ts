@@ -114,11 +114,11 @@ export class DurationHoverProvider implements vscode.HoverProvider {
     let start = charPos;
     let end = charPos;
 
-    while (start > 0 && /[[\w.].$*]/.test(line[start - 1])) {
+    while (start > 0 && /[\w.$*]/.test(line[start - 1])) {
       start--;
     }
 
-    while (end < line.length && /[[\w.].$*]/.test(line[end])) {
+    while (end < line.length && /[\w.$*]/.test(line[end])) {
       end++;
     }
 
@@ -170,7 +170,7 @@ export class DurationHoverProvider implements vscode.HoverProvider {
         continue;
       }
       break;
-    }}
+    }
 
     const expression = line.substring(start, end);
     if (/[+\-*/]/.test(expression)) {
