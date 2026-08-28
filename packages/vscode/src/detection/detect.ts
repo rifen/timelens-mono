@@ -92,7 +92,7 @@ function inferFromContext(
   token: string,
   document: vscode.TextDocument,
   position: vscode.Position,
-  settings: any
+  _settings: unknown
 ): DetectedDuration | null {
   const line = document.getText(
     new vscode.Range(

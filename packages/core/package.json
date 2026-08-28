@@ -1,5 +1,5 @@
 {
-  "name": "@timelens/core",
+  "name": "@rifen/timelens-core",
   "version": "0.1.0",
   "description": "Shared detection and formatting logic for TimeLens (VS Code, Neovim, CLI)",
   "main": "dist/index.js",

@@ -39,7 +39,7 @@
   },
   "homepage": "https://github.com/rifen/timelens#readme",
   "dependencies": {
-    "@timelens/core": "workspace:*"
+    "@rifen/timelens-core": "^0.1.0"
   },
   "contributes": {
     "configuration": {
@@ -160,7 +160,7 @@
     "pretest": "npm run compile && npm run lint",
     "test": "node ./test/runTest.js",
     "unit-test": "mocha --require ts-node/register test/*.test.ts",
-    "lint": "echo 'Lint skipped for development'",
+    "lint": "eslint src --ext .ts --ignore-path .gitignore",
     "package": "vsce package",
     "publish": "vsce publish"
   },

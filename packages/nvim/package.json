@@ -8,7 +8,7 @@
     "build": "tsc -p tsconfig.bridge.json"
   },
   "dependencies": {
-    "@timelens/core": "workspace:*"
+    "@rifen/timelens-core": "^0.1.0"
   },
   "devDependencies": {
     "typescript": "^5.3.3",

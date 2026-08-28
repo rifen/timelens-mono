@@ -1,12 +1,12 @@
 import * as vscode from 'vscode';
-import { detectDuration, formatDurationFull } from '@timelens/core';
+import { detectDuration, formatDurationFull } from '@rifen/timelens-core';
 import { getSettings } from '../config/settings';
 
 export class DurationHoverProvider implements vscode.HoverProvider {
   provideHover(
     document: vscode.TextDocument,
     position: vscode.Position,
-    token: vscode.CancellationToken
+    _token: vscode.CancellationToken
   ): vscode.Hover | null {
     const settings = getSettings();
 
@@ -22,12 +22,12 @@ export class DurationHoverProvider implements vscode.HoverProvider {
       )
     );
 
-    // Use @timelens/core for detection
+    // Use @rifen/timelens-core for detection
     const duration = detectDuration(word, line, settings);
 
     if (!duration) return null;
 
-    // Use @timelens/core for formatting
+    // Use @rifen/timelens-core for formatting
     const formatted = formatDurationFull(duration.value, duration.unit, {
       format: settings.format,
       showBreakdown: settings.showBreakdown,

@@ -32,6 +32,19 @@ docs
 !dist/**/*.js
 !dist/**/*.d.ts
 
-# Exclude monorepo root files
-../../**
-!../../packages/core/dist/**
+# Exclude monorepo sibling packages
+../../packages/core/**
+../../packages/nvim/**
+
+# Exclude monorepo root
+../../.git/**
+../../node_modules/**
+../../pnpm-lock.yaml
+
+# Only include what's needed
+!package.json
+!README.md
+!CHANGELOG.md
+!LICENSE
+!dist/**
+!src/**/*.ts

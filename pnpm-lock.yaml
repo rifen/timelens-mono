@@ -32,9 +32,9 @@ importers:
 
   packages/nvim:
     dependencies:
-      '@timelens/core':
-        specifier: workspace:*
-        version: link:../core
+      '@rifen/timelens-core':
+        specifier: ^0.1.0
+        version: 0.1.0
       neovim:
         specifier: '>=0.5.0'
         version: 5.4.0
@@ -51,9 +51,9 @@ importers:
 
   packages/vscode:
     dependencies:
-      '@timelens/core':
-        specifier: workspace:*
-        version: link:../core
+      '@rifen/timelens-core':
+        specifier: ^0.1.0
+        version: 0.1.0
     devDependencies:
       '@types/glob':
         specifier: ^8.1.0
@@ -420,6 +420,9 @@ packages:
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
+
+  '@rifen/timelens-core@0.1.0':
+    resolution: {integrity: sha512-nutpB2y3+VY4oG6uAa4IhX1WWEnNqFXYPeYmhh73hPcnTaF0tzl/50XS28lxnHmoSvTHvzHuO3X/asxCpkI/XA==}
 
   '@sinclair/typebox@0.27.12':
     resolution: {integrity: sha512-hhyNJ+nbR6ZR7pToHvllEFun9TL0sbL+tk/ON75lo+Xas054uez98qRbsuNt7MBCyZKK4+8Yli/OAGZhmfBZ/g==}
@@ -2853,6 +2856,8 @@ snapshots:
 
   '@pkgjs/parseargs@0.11.0':
     optional: true
+
+  '@rifen/timelens-core@0.1.0': {}
 
   '@sinclair/typebox@0.27.12': {}
 

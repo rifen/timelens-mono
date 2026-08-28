@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { DurationHoverProvider } from './provider/durationHover';
 
 export function activate(context: vscode.ExtensionContext) {
-  console.log('TimeLens: activating...');
+  // Activation logging handled by VS Code
   
   // Register hover provider for all languages (we filter in the provider)
   const selector: vscode.DocumentSelector = '*';
@@ -22,9 +22,9 @@ export function activate(context: vscode.ExtensionContext) {
   
   context.subscriptions.push(toggleCmd);
   
-  console.log('TimeLens: activated');
+  // Activated
 }
 
 export function deactivate() {
-  console.log('TimeLens: deactivated');
+  // Deactivated
 }
