@@ -33,10 +33,10 @@ jobs:
         run: pnpm -r run build
 
       - name: Run core tests
-        run: pnpm --filter @timelens/core test
+        run: pnpm --filter @rifen/timelens-core test
 
       - name: Run unit tests
-        run: pnpm --filter timelens-vscode run unit-test
+        run: pnpm --filter timelens-vscode run test
 
   package:
     runs-on: ubuntu-latest
