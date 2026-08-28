@@ -52,8 +52,8 @@ importers:
   packages/vscode:
     dependencies:
       '@rifen/timelens-core':
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.1.1
+        version: 0.1.1
     devDependencies:
       '@types/glob':
         specifier: ^8.1.0
@@ -423,6 +423,9 @@ packages:
 
   '@rifen/timelens-core@0.1.0':
     resolution: {integrity: sha512-nutpB2y3+VY4oG6uAa4IhX1WWEnNqFXYPeYmhh73hPcnTaF0tzl/50XS28lxnHmoSvTHvzHuO3X/asxCpkI/XA==}
+
+  '@rifen/timelens-core@0.1.1':
+    resolution: {integrity: sha512-OeWxWQQCmkYTKhzgFA1j8Ya3MinKJWVhMELll5J1PqdladDGRTysGie/xASJcQY2mnsNqI/0yE5yQ8TFu+Q8MA==}
 
   '@sinclair/typebox@0.27.12':
     resolution: {integrity: sha512-hhyNJ+nbR6ZR7pToHvllEFun9TL0sbL+tk/ON75lo+Xas054uez98qRbsuNt7MBCyZKK4+8Yli/OAGZhmfBZ/g==}
@@ -2858,6 +2861,8 @@ snapshots:
     optional: true
 
   '@rifen/timelens-core@0.1.0': {}
+
+  '@rifen/timelens-core@0.1.1': {}
 
   '@sinclair/typebox@0.27.12': {}
 

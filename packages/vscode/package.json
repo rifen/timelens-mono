@@ -2,7 +2,7 @@
   "name": "timelens-vscode",
   "displayName": "TimeLens",
   "description": "Hover any integer duration → see human-readable time instantly.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "timelens",
   "engines": {
     "vscode": "^1.85.0"
@@ -39,7 +39,7 @@
   },
   "homepage": "https://github.com/rifen/timelens#readme",
   "dependencies": {
-    "@rifen/timelens-core": "^0.1.0"
+    "@rifen/timelens-core": "^0.1.1"
   },
   "contributes": {
     "configuration": {

@@ -78,42 +78,52 @@ function inferFromContext(
 ): DetectedDuration | null {
   // Tokenize the line, preserving the expression structure
   const tokens = line.split(/[\s=*+/\-()]+/).filter(Boolean);
-  
+
   // For expressions like "60 * 40 * 24", find any token from the expression
   const expressionParts = token.split(/[\s*+/\-()]+/).filter(Boolean);
   const tokenIndex = tokens.findIndex(t => expressionParts.includes(t));
-  
+
   if (tokenIndex === -1) return null;
 
   const contextStart = Math.max(0, tokenIndex - 2);
   const contextEnd = Math.min(tokens.length, tokenIndex + 3);
   const contextTokens = tokens.slice(contextStart, contextEnd);
 
+  for (const t of contextTokens) {
+    const lower = t.toLowerCase();
+
+    // Direct unit suffixes: _NS, _US, _MS, _SEC, _S, or full words
+    if (/\bns\b/i.test(lower) || /(?:^|_)ns$/i.test(lower) || /nano(?:s|seconds)?$/i.test(lower)) {
+      return { value: 0, unit: 'nanoseconds', confidence: 0.95, source: 'context', contextHint: `unit suffix: "${t}"` };
+    }
+    if (/\bus\b/i.test(lower) || /(?:^|_)us$/i.test(lower) || /micro(?:s|seconds)?$/i.test(lower)) {
+      return { value: 0, unit: 'microseconds', confidence: 0.95, source: 'context', contextHint: `unit suffix: "${t}"` };
+    }
+    if (/\bms\b/i.test(lower) || /(?:^|_)ms$/i.test(lower) || /milli(?:s|seconds)?$/i.test(lower)) {
+      return { value: 0, unit: 'milliseconds', confidence: 0.95, source: 'context', contextHint: `unit suffix: "${t}"` };
+    }
+    if (/\bsec(?:s)?\b/i.test(lower) || /(?:^|_)sec(?:s)?$/i.test(lower) || /second(?:s)?$/i.test(lower)) {
+      return { value: 0, unit: 'seconds', confidence: 0.95, source: 'context', contextHint: `unit suffix: "${t}"` };
+    }
+    if (/\bs\b/i.test(lower) || /(?:^|_)s$/i.test(lower) || /second(?:s)?$/i.test(lower)) {
+      return { value: 0, unit: 'seconds', confidence: 0.95, source: 'context', contextHint: `unit suffix: "${t}"` };
+    }
+  }
+
+  // Semantic keywords (only if no explicit unit suffix matched)
   let bestUnit: DetectedDuration['unit'] | null = null;
   let bestConfidence = 0;
   let bestHint = '';
 
   for (const t of contextTokens) {
     const lower = t.toLowerCase();
-
-    // Direct unit suffixes: _NS, _US, _MS, _SEC, or full words
-    if (/\bns\b/i.test(lower) || /(?:^|_)ns$/i.test(lower) || /nano(?:s)?$/i.test(lower)) {
-      return { value: 0, unit: 'nanoseconds', confidence: 0.95, source: 'context', contextHint: `unit suffix: "${t}"` };
-    }
-    if (/\bus\b/i.test(lower) || /(?:^|_)us$/i.test(lower) || /micro(?:s)?$/i.test(lower)) {
-      return { value: 0, unit: 'microseconds', confidence: 0.95, source: 'context', contextHint: `unit suffix: "${t}"` };
-    }
-    if (/\bms\b/i.test(lower) || /(?:^|_)ms$/i.test(lower) || /milli(?:s)?$/i.test(lower)) {
-      return { value: 0, unit: 'milliseconds', confidence: 0.95, source: 'context', contextHint: `unit suffix: "${t}"` };
-    }
-    if (/\bsec(?:s)?\b/i.test(lower) || /(?:^|_)sec(?:s)?$/i.test(lower) || /second(?:s)?$/i.test(lower)) {
-      return { value: 0, unit: 'seconds', confidence: 0.95, source: 'context', contextHint: `unit suffix: "${t}"` };
-    }
-
-    // Semantic keywords
     const unitFromKeyword = inferUnitFromKeyword(lower);
     if (unitFromKeyword) {
-      const confidence = keywordConfidence(lower);
+      let confidence = keywordConfidence(lower);
+      // Boost confidence for explicit unit words
+      if (/(milli|micro|nano|second)s?/.test(lower)) {
+        confidence = 0.95;
+      }
       if (confidence > bestConfidence) {
         bestUnit = unitFromKeyword;
         bestConfidence = confidence;
@@ -136,9 +146,9 @@ function inferFromContext(
 }
 
 function inferUnitFromKeyword(word: string): DetectedDuration['unit'] | null {
-  if (/\bms\b/.test(word) || /millisecond/.test(word)) return 'milliseconds';
-  if (/\bus\b/.test(word) || /microsecond/.test(word)) return 'microseconds';
-  if (/\bns\b/.test(word) || /nanosecond/.test(word)) return 'nanoseconds';
+  if (/\bms\b/.test(word) || /millisecond/.test(word) || /milliseconds/.test(word)) return 'milliseconds';
+  if (/\bus\b/i.test(word) || /microsecond/.test(word) || /microseconds/.test(word)) return 'microseconds';
+  if (/\bns\b/i.test(word) || /nanosecond/.test(word) || /nanoseconds/.test(word)) return 'nanoseconds';
 
   if (
     word.includes('retry') ||
