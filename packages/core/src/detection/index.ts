@@ -1,9 +1,12 @@
 import {
   TimeLensSettings,
   DetectedDuration,
+  DetectedItem,
+  ScanResult,
   DEFAULT_SETTINGS
 } from '../types';
-import { evaluateExpression } from '../formatting';
+import { evaluateExpression, formatDurationFull } from '../formatting';
+
 
 const UNIT_THRESHOLDS = {
   nanoseconds: 1e15,
@@ -76,12 +79,13 @@ function inferFromContext(
   line: string,
   settings: TimeLensSettings
 ): DetectedDuration | null {
-  // Tokenize the line, preserving the expression structure
-  const tokens = line.split(/[\s=*+/\-()]+/).filter(Boolean);
+  // Tokenize the line, preserving variable names with underscores
+  const tokens = line.split(/[\s=;,:*+/\-()[\]{}'"<>|&!]+/).filter(Boolean);
 
   // For expressions like "60 * 40 * 24", find any token from the expression
   const expressionParts = token.split(/[\s*+/\-()]+/).filter(Boolean);
   const tokenIndex = tokens.findIndex(t => expressionParts.includes(t));
+
 
   if (tokenIndex === -1) return null;
 
@@ -195,3 +199,76 @@ function keywordConfidence(word: string): number {
   }
   return 0.65;
 }
+
+export function scanCode(
+  code: string,
+  filePath?: string,
+  settings: Partial<TimeLensSettings> = {}
+): ScanResult {
+  const mergedSettings = { ...DEFAULT_SETTINGS, ...settings };
+  const lines = code.split(/\r?\n/);
+  const items: DetectedItem[] = [];
+
+  for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+    const rawLine = lines[lineIndex];
+    const lineNum = lineIndex + 1;
+
+    // Check for variable/key identifier if present
+    const identifierMatch = rawLine.match(/(?:(?:const|let|var|val)\s+)?([A-Za-z0-9_$-]+)\s*[:=]\s*/);
+    const lineIdentifier = identifierMatch ? identifierMatch[1] : undefined;
+
+    // Regex for numeric expressions (e.g. 900, 60 * 60 * 24, 30000, 5000)
+    const exprRegex = /\b\d+(?:\.\d+)?(?:\s*[\*\/+-]\s*\d+(?:\.\d+)?)*\b/g;
+    let match: RegExpExecArray | null;
+
+    const matchedSpans: Array<{ start: number; end: number }> = [];
+
+    while ((match = exprRegex.exec(rawLine)) !== null) {
+      const token = match[0].trim();
+      const colIndex = match.index + 1;
+      const spanEnd = match.index + match[0].length;
+
+      // Check if this overlaps with an already matched longer span
+      const overlaps = matchedSpans.some(s => match!.index >= s.start && spanEnd <= s.end);
+      if (overlaps) continue;
+
+      // Skip tokens inside regex quantifier brackets like {1,3} or \d{10,}
+      const beforeChar = match.index > 0 ? rawLine[match.index - 1] : '';
+      const afterChar = spanEnd < rawLine.length ? rawLine[spanEnd] : '';
+      if ((beforeChar === '{' || beforeChar === ',') && (afterChar === '}' || afterChar === ',')) {
+        continue;
+      }
+      // Skip version string parts like v1.2.3 or @1.2.3
+      if (beforeChar === 'v' || beforeChar === '@' || beforeChar === '^' || beforeChar === '~') {
+        continue;
+      }
+
+      const detected = detectDuration(token, rawLine, mergedSettings);
+      if (detected) {
+        matchedSpans.push({ start: match.index, end: spanEnd });
+        const formatted = formatDurationFull(detected.value, detected.unit, {
+          format: mergedSettings.format || 'compact',
+          showBreakdown: mergedSettings.showBreakdown ?? true,
+          showUnitLabel: mergedSettings.showUnitLabel ?? true
+        });
+
+        items.push({
+          ...detected,
+          token,
+          line: lineNum,
+          column: colIndex,
+          formatted,
+          lineContext: rawLine.trim(),
+          identifier: lineIdentifier
+        });
+      }
+    }
+  }
+
+  return {
+    filePath,
+    items,
+    totalCount: items.length
+  };
+}
+

@@ -9,7 +9,8 @@
     "build": "pnpm -r run build",
     "test": "pnpm -r run test",
     "lint": "pnpm -r run lint",
-    "package:core": "pnpm --filter @timelens/core run build",
+    "timelens": "node packages/core/dist/cli.js",
+    "package:core": "pnpm --filter @rifen/timelens-core run build",
     "package:vscode": "pnpm --filter timelens-vscode run package",
     "package:nvim": "pnpm --filter timelens-nvim run build"
   },

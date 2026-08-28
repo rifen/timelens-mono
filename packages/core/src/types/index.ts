@@ -45,3 +45,29 @@ export interface FormatOptions {
   showBreakdown: boolean;
   showUnitLabel: boolean;
 }
+
+export interface DetectedItem extends DetectedDuration {
+  token: string;
+  line: number;
+  column: number;
+  formatted: string;
+  lineContext: string;
+  identifier?: string;
+}
+
+export interface ScanResult {
+  filePath?: string;
+  items: DetectedItem[];
+  totalCount: number;
+}
+
+export interface FileScanResult extends ScanResult {
+  filePath: string;
+}
+
+export interface GCFOptions {
+  profile?: 'generic' | 'graph';
+  toolName?: string;
+  tokenBudget?: number;
+  formatOptions?: Partial<FormatOptions>;
+}

@@ -3,41 +3,49 @@ import { detectDuration, formatDurationFull } from '@rifen/timelens-core';
 import { getSettings } from '../config/settings';
 
 export class DurationHoverProvider implements vscode.HoverProvider {
+  private readonly log: (message: string, ...args: unknown[]) => void;
+
+  constructor(logFn: (message: string, ...args: unknown[]) => void) {
+    this.log = logFn;
+  }
+
   provideHover(
     document: vscode.TextDocument,
     position: vscode.Position,
     _token: vscode.CancellationToken
   ): vscode.Hover | null {
     const settings = getSettings();
-
-    if (!settings.enabled) return null;
+    if (!settings.enabled) {
+      return null;
+    }
 
     const lineText = document.lineAt(position.line).text;
+    this.log('hover request', { line: position.line, char: position.character, lineText });
 
-    // Find the best candidate token/expression at or near the cursor
     const candidate = this.extractCandidate(lineText, position.character, position.line);
-    if (!candidate) return null;
+    if (!candidate) {
+      this.log('no candidate');
+      return null;
+    }
 
     const { token, range } = candidate;
+    const sanitized = this.stripComments(token).trim();
+    this.log('sanitized token', sanitized);
 
-    // Use @rifen/timelens-core for detection
-    const duration = detectDuration(token, lineText, settings);
+    const duration = detectDuration(sanitized, lineText, settings);
+    if (!duration) {
+      this.log('no detection result');
+      return null;
+    }
 
-    if (!duration) return null;
-
-    // Use @rifen/timelens-core for formatting
     const formatted = formatDurationFull(duration.value, duration.unit, {
       format: settings.format,
       showBreakdown: settings.showBreakdown,
       showUnitLabel: settings.showUnitLabel
     });
 
-    // Build markdown tooltip — just the human-readable duration
-    const lines: string[] = [formatted];
-
-    // Show what the inferred context was
+    const lines = [formatted];
     if (duration.source === 'context' && duration.contextHint) {
-      lines.push('');
       lines.push(`*inferred from ${duration.contextHint}*`);
     }
 
@@ -49,7 +57,8 @@ export class DurationHoverProvider implements vscode.HoverProvider {
     charPos: number,
     lineNum: number
   ): { token: string; range: vscode.Range } | null {
-    // First, try to find a variable assignment pattern: NAME = EXPRESSION
+    this.log('extractCandidate', { line, charPos });
+
     const assignmentMatch = line.match(/^(\s*)([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.+)$/);
     if (assignmentMatch) {
       const [, leading, varName, expression] = assignmentMatch;
@@ -57,69 +66,59 @@ export class DurationHoverProvider implements vscode.HoverProvider {
       const varEnd = varStart + varName.length;
       const exprStart = varEnd + (assignmentMatch[0].length - (leading.length + varName.length + expression.length));
 
-      // Check if cursor is on the variable name
+      this.log('assignment match', { varName, expression, varStart, varEnd, exprStart, charPos });
+
       if (charPos >= varStart && charPos <= varEnd) {
-        // Return the full expression as the token
+        this.log('cursor on variable name');
         return {
           token: expression.trim(),
-          range: new vscode.Range(
-            new vscode.Position(lineNum, varStart),
-            new vscode.Position(lineNum, varEnd)
-          )
+          range: new vscode.Range(new vscode.Position(lineNum, varStart), new vscode.Position(lineNum, varEnd))
         };
       }
 
-      // Check if cursor is on or near the expression
       if (charPos >= exprStart && charPos <= exprStart + expression.length) {
+        this.log('cursor on expression');
         return {
           token: expression.trim(),
-          range: new vscode.Range(
-            new vscode.Position(lineNum, exprStart),
-            new vscode.Position(lineNum, exprStart + expression.length)
-          )
+          range: new vscode.Range(new vscode.Position(lineNum, exprStart), new vscode.Position(lineNum, exprStart + expression.length))
         };
       }
     }
 
-    // Fall back to word-based detection for bare values
     const wordRange = this.getWordRangeAtPosition(line, charPos);
-    if (!wordRange) return null;
+    if (!wordRange) {
+      this.log('no word range');
+      return null;
+    }
 
     const word = line.substring(wordRange.start, wordRange.end);
+    this.log('word range', wordRange, word);
 
-    // Check if this word is part of an arithmetic expression
     const expressionMatch = this.findContainingExpression(line, wordRange.start, wordRange.end);
     if (expressionMatch) {
+      this.log('expression match', expressionMatch);
       return {
         token: expressionMatch.expression.trim(),
-        range: new vscode.Range(
-          new vscode.Position(lineNum, expressionMatch.start),
-          new vscode.Position(lineNum, expressionMatch.end)
-        )
+        range: new vscode.Range(new vscode.Position(lineNum, expressionMatch.start), new vscode.Position(lineNum, expressionMatch.end))
       };
     }
 
+    this.log('fallback to word');
     return {
       token: word,
-      range: new vscode.Range(
-        new vscode.Position(lineNum, wordRange.start),
-        new vscode.Position(lineNum, wordRange.end)
-      )
+      range: new vscode.Range(new vscode.Position(lineNum, wordRange.start), new vscode.Position(lineNum, wordRange.end))
     };
   }
 
   private getWordRangeAtPosition(line: string, charPos: number): { start: number; end: number } | null {
-    // Find word boundaries (alphanumeric, underscore, dots, operators)
     let start = charPos;
     let end = charPos;
 
-    // Expand backward
-    while (start > 0 && /[\w\.\$\*]/.test(line[start - 1])) {
+    while (start > 0 && /[[\w.].$*]/.test(line[start - 1])) {
       start--;
     }
 
-    // Expand forward
-    while (end < line.length && /[\w\.\$\*]/.test(line[end])) {
+    while (end < line.length && /[[\w.].$*]/.test(line[end])) {
       end++;
     }
 
@@ -132,17 +131,14 @@ export class DurationHoverProvider implements vscode.HoverProvider {
     wordStart: number,
     wordEnd: number
   ): { expression: string; start: number; end: number } | null {
-    // Look for arithmetic operators around the word
-    const operators = /[\+\-\*\/\(\)]/;
+    const operators = /[+\-*/()]/;
 
     let start = wordStart;
     let end = wordEnd;
 
-    // Expand backward to find start of expression
     while (start > 0) {
       const char = line[start - 1];
       if (/\s/.test(char)) {
-        // Check if previous non-space is an operator
         let i = start - 1;
         while (i >= 0 && /\s/.test(line[i])) i--;
         if (i >= 0 && operators.test(line[i])) {
@@ -151,18 +147,16 @@ export class DurationHoverProvider implements vscode.HoverProvider {
         }
         break;
       }
-      if (operators.test(char) || /[\w\.]/.test(char)) {
+      if (operators.test(char) || /[\w.]/ .test(char)) {
         start--;
         continue;
       }
       break;
     }
 
-    // Expand forward to find end of expression
     while (end < line.length) {
       const char = line[end];
       if (/\s/.test(char)) {
-        // Check if next non-space is an operator
         let i = end;
         while (i < line.length && /\s/.test(line[i])) i++;
         if (i < line.length && operators.test(line[i])) {
@@ -171,19 +165,25 @@ export class DurationHoverProvider implements vscode.HoverProvider {
         }
         break;
       }
-      if (operators.test(char) || /[\w\.]/.test(char)) {
+      if (operators.test(char) || /[\w.]/ .test(char)) {
         end++;
         continue;
       }
       break;
-    }
+    }}
 
-    // Must contain at least one operator to be an expression
     const expression = line.substring(start, end);
-    if (/[\+\-\*\/]/.test(expression)) {
+    if (/[+\-*/]/.test(expression)) {
       return { expression, start, end };
     }
 
     return null;
+  }
+
+  private stripComments(expr: string): string {
+    let result = expr.replace(/\s*#[^\n]*/g, '');
+    result = result.replace(/\s*\/\/.*$/gm, '');
+    result = result.replace(/\/\*[\s\S]*?\*\//g, '');
+    return result.trim();
   }
 }

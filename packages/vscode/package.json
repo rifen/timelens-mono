@@ -164,6 +164,23 @@
     "package": "vsce package",
     "publish": "vsce publish"
   },
+  "commands": [
+    {
+      "command": "timelens.toggle",
+      "title": "TimeLens: Toggle Enabled",
+      "category": "TimeLens"
+    },
+    {
+      "command": "timelens.dumpSettings",
+      "title": "TimeLens: Dump Settings to Output",
+      "category": "TimeLens"
+    },
+    {
+      "command": "timelens.logHoverTarget",
+      "title": "TimeLens: Log Hover Target",
+      "category": "TimeLens"
+    }
+  ],
   "devDependencies": {
     "@types/glob": "^8.1.0",
     "@types/mocha": "^10.0.10",

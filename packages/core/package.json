@@ -4,12 +4,16 @@
   "description": "Shared detection and formatting logic for TimeLens (VS Code, Neovim, CLI)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": {
+    "timelens": "dist/cli.js"
+  },
   "files": [
     "dist"
   ],
   "scripts": {
     "build": "tsc",
     "dev": "tsc -w",
+    "cli": "node dist/cli.js",
     "test": "jest",
     "prepublishOnly": "npm run build"
   },
@@ -31,5 +35,8 @@
     "jest": "^29.7.0",
     "ts-jest": "^29.4.12",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@blackwell-systems/gcf": "^2.6.1"
   }
 }

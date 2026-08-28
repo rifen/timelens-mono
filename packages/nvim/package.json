@@ -5,14 +5,19 @@
   "main": "lua/timelens/init.lua",
   "scripts": {
     "bridge": "node bin/bridge.js",
-    "build": "tsc -p tsconfig.bridge.json"
+    "build": "tsc -p tsconfig.bridge.json",
+    "test": "jest --runInBand",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@rifen/timelens-core": "^0.1.1"
   },
   "devDependencies": {
-    "typescript": "^5.3.3",
-    "@types/node": "^20.0.0"
+    "@types/jest": "^29.5.14",
+    "@types/node": "^20.0.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.4.12",
+    "typescript": "^5.3.3"
   },
   "peerDependencies": {
     "neovim": ">=0.5.0",
