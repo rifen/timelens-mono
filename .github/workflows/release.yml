@@ -28,7 +28,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build core
-        run: pnpm --filter @rifen/timescope-core run build
+        run: pnpm --filter @rifen/timelens-core run build
 
       - name: Publish to npm
         run: npm publish --access public

@@ -33,7 +33,7 @@ jobs:
         run: pnpm -r run build
 
       - name: Run core tests
-        run: pnpm --filter @rifen/timescope-core test
+        run: pnpm --filter @rifen/timelens-core test
 
   package:
     runs-on: ubuntu-latest
