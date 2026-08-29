@@ -20,7 +20,7 @@ This package is part of the [TimeScope Monorepo](https://github.com/rifen/timele
 
 ```bash
 git clone https://github.com/rifen/timelens-mono.git
-cd timelens-mono/packages/core
+cd timescope/packages/core
 pnpm install
 pnpm build
 ```

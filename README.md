@@ -17,7 +17,7 @@ TimeLens is a cross-editor tool that eliminates mental math by hovering over num
 ```bash
 # Clone and install
 git clone https://github.com/rifen/timelens-mono.git
-cd timelens-mono
+cd timescope
 pnpm install
 
 # Build all packages
