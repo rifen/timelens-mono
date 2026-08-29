@@ -64,11 +64,11 @@ interval: 3600000             # → "1 hour"
 ## 🚀 Install
 
 ```bash
-# VS Code Marketplace (coming soon)
-code --install-extension timelens.timelens
+# From VSIX (install from /tmp or download)
+code --install-extension timelens-vscode-0.1.1.vsix
 
-# Or from VSIX
-code --install-extension timelens-0.1.0.vsix
+# Or from VS Code Marketplace (after publication)
+# Extension ID: timelens.timelens
 ```
 
 ---
@@ -150,8 +150,9 @@ vsce publish
 
 ## 🤝 Related
 
-- **[TimeLens Neovim](https://github.com/yourname/timelens-nvim)** — Same functionality for Neovim
-- **TimeLens Core** (planned) — Shared detection/formatting logic as npm package
+- **[TimeLens Core](https://github.com/rifen/timelens-core)** — Shared detection/formatting logic (`@rifen/timelens-core`)
+- **[TimeLens Neovim](https://github.com/rifen/timelens-nvim)** — Same functionality for Neovim
+- **[Monorepo](https://github.com/rifen/timelens-mono)** — All packages in one repo
 
 ---
 

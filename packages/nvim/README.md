@@ -117,3 +117,9 @@ return {
   end,
 }
 ```
+
+## Related
+
+- **[TimeLens VS Code](https://github.com/rifen/timelens-mono#readme)** — Hover provider for VS Code
+- **[TimeLens Core](https://github.com/rifen/timelens-core)** — Shared detection/formatting library
+- **[Monorepo](https://github.com/rifen/timelens-mono)** — All packages in one repo
