@@ -5,7 +5,7 @@ local plugin_root = debug.getinfo(1, 'S').source:match('@?(.*/)')
 local bridge_path = plugin_root .. '../bin/bridge.js'
 
 function M.setup()
-  local group = vim.api.nvim_create_augroup('TimeLens', { clear = true })
+  local group = vim.api.nvim_create_augroup('TimeScope', { clear = true })
   vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
     group = group,
     callback = function()

@@ -1,8 +1,8 @@
--- Example lazy.nvim configuration for TimeLens
+-- Example lazy.nvim configuration for TimeScope
 -- Add this to your Lazy.nvim setup in ~/.config/nvim/lua/plugins/timelens.lua
 
 return {
-  -- TimeLens: hover to see human-readable durations
+  -- TimeScope: hover to see human-readable durations
   'rifen/timelens-nvim',
   version = '^0.1.0',
   dependencies = {
@@ -35,15 +35,15 @@ return {
     {
       '<leader>tl',
       function()
-        -- Toggle TimeLens on/off
+        -- Toggle TimeScope on/off
         local state = vim.g.timelens_enabled
         vim.g.timelens_enabled = not state
         vim.notify(
-          'TimeLens ' .. (not state and 'enabled' or 'disabled'),
+          'TimeScope ' .. (not state and 'enabled' or 'disabled'),
           state and 'warn' or 'info'
         )
       end,
-      desc = 'TimeLens: toggle hover',
+      desc = 'TimeScope: toggle hover',
     },
     {
       '<leader>tr',
@@ -51,7 +51,7 @@ return {
         -- Force refresh hover on current line
         require('timelens.hover').show_duration()
       end,
-      desc = 'TimeLens: refresh hover',
+      desc = 'TimeScope: refresh hover',
     },
   },
 

@@ -72,7 +72,7 @@ export function toGraphGCF(
 }
 
 /**
- * Converts TimeLens scan results or items into GCF format.
+ * Converts TimeScope scan results or items into GCF format.
  */
 export function toGCF(
   data: ScanResult | ScanResult[] | DetectedItem[],

@@ -6,15 +6,15 @@ let outputChannel: vscode.OutputChannel | undefined;
 
 function log(...args: unknown[]) {
   if (!outputChannel) {
-    outputChannel = vscode.window.createOutputChannel('TimeLens');
+    outputChannel = vscode.window.createOutputChannel('TimeScope');
   }
   const message = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : String(arg)).join(' ');
-  outputChannel.appendLine(`[TimeLens] ${message}`);
+  outputChannel.appendLine(`[TimeScope] ${message}`);
 }
 
 export function activate(context: vscode.ExtensionContext) {
-  outputChannel = vscode.window.createOutputChannel('TimeLens');
-  log('Activating TimeLens extension');
+  outputChannel = vscode.window.createOutputChannel('TimeScope');
+  log('Activating TimeScope extension');
 
   // Register hover provider for all languages (we filter in the provider)
   const selector: vscode.DocumentSelector = '*';
@@ -27,17 +27,17 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(disposable);
 
   // Register a command to manually toggle (optional)
-  const toggleCmd = vscode.commands.registerCommand('timelens.toggle', () => {
-    const config = vscode.workspace.getConfiguration('timelens');
+  const toggleCmd = vscode.commands.registerCommand('timescope.toggle', () => {
+    const config = vscode.workspace.getConfiguration('timescope');
     const current = config.get('enabled', true);
     config.update('enabled', !current, vscode.ConfigurationTarget.Global);
-    vscode.window.showInformationMessage(`TimeLens ${!current ? 'enabled' : 'disabled'}`);
+    vscode.window.showInformationMessage(`TimeScope ${!current ? 'enabled' : 'disabled'}`);
   });
 
   context.subscriptions.push(toggleCmd);
 
-  // Command to dump current settings to the TimeLens output channel
-  const dumpSettingsCmd = vscode.commands.registerCommand('timelens.dumpSettings', () => {
+  // Command to dump current settings to the TimeScope output channel
+  const dumpSettingsCmd = vscode.commands.registerCommand('timescope.dumpSettings', () => {
     const settings = getSettings();
     log('=== Current Settings ===');
     for (const [key, value] of Object.entries(settings)) {
@@ -49,7 +49,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(dumpSettingsCmd);
 
   // Command to log current hover target info
-  const logHoverTargetCmd = vscode.commands.registerCommand('timelens.logHoverTarget', async () => {
+  const logHoverTargetCmd = vscode.commands.registerCommand('timescope.logHoverTarget', async () => {
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
       log('No active editor');
@@ -73,7 +73,7 @@ export function activate(context: vscode.ExtensionContext) {
   });
   context.subscriptions.push(logHoverTargetCmd);
 
-  log('TimeLens extension activated successfully');
+  log('TimeScope extension activated successfully');
 }
 
 export function deactivate() {

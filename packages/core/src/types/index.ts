@@ -1,4 +1,4 @@
-export interface TimeLensSettings {
+export interface TimeScopeSettings {
   defaultUnit: 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds' | 'auto';
   format: 'compact' | 'verbose' | 'both';
   minValue: number;
@@ -10,7 +10,7 @@ export interface TimeLensSettings {
   keywords: string[];
 }
 
-export const DEFAULT_SETTINGS: TimeLensSettings = {
+export const DEFAULT_SETTINGS: TimeScopeSettings = {
   defaultUnit: 'seconds',
   format: 'compact',
   minValue: 1,

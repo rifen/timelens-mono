@@ -1,6 +1,6 @@
-# TimeLens Core (`@rifen/timelens-core`)
+# TimeScope Core (`@rifen/timelens-core`)
 
-**Shared detection, formatting, and AI-native GCF serialization for TimeLens.**
+**Shared detection, formatting, and AI-native GCF serialization for TimeScope.**
 
 The core library powers both the VS Code extension and Neovim plugin. It provides:
 - Duration detection from context (variable names, comments, file type)
@@ -16,7 +16,7 @@ npm install @rifen/timelens-core
 
 ## Monorepo
 
-This package is part of the [TimeLens Monorepo](https://github.com/rifen/timelens-mono):
+This package is part of the [TimeScope Monorepo](https://github.com/rifen/timelens-mono):
 
 ```bash
 git clone https://github.com/rifen/timelens-mono.git

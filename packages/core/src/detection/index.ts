@@ -1,5 +1,5 @@
 import {
-  TimeLensSettings,
+  TimeScopeSettings,
   DetectedDuration,
   DetectedItem,
   ScanResult,
@@ -18,7 +18,7 @@ const UNIT_THRESHOLDS = {
 export function detectDuration(
   token: string,
   lineContext: string,
-  settings: Partial<TimeLensSettings> = {}
+  settings: Partial<TimeScopeSettings> = {}
 ): DetectedDuration | null {
   const mergedSettings = { ...DEFAULT_SETTINGS, ...settings };
 
@@ -77,7 +77,7 @@ export function detectDuration(
 function inferFromContext(
   token: string,
   line: string,
-  settings: TimeLensSettings
+  settings: TimeScopeSettings
 ): DetectedDuration | null {
   // Tokenize the line, preserving variable names with underscores
   const tokens = line.split(/[\s=;,:*+/\-()[\]{}'"<>|&!]+/).filter(Boolean);
@@ -203,7 +203,7 @@ function keywordConfidence(word: string): number {
 export function scanCode(
   code: string,
   filePath?: string,
-  settings: Partial<TimeLensSettings> = {}
+  settings: Partial<TimeScopeSettings> = {}
 ): ScanResult {
   const mergedSettings = { ...DEFAULT_SETTINGS, ...settings };
   const lines = code.split(/\r?\n/);

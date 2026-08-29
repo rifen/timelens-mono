@@ -1,8 +1,8 @@
-# TimeLens — VSCode Extension
+# TimeScope — VSCode Extension
 
 **Hover any integer duration → see human-readable time instantly.**
 
-TimeLens eliminates the mental math of converting raw numbers (seconds, milliseconds, nanoseconds) into readable durations. 
+TimeScope eliminates the mental math of converting raw numbers (seconds, milliseconds, nanoseconds) into readable durations. 
 Perfect for HTTP timeouts, retry intervals, TTLs, cache configs, cron schedules, and any numeric time value in your code.
 
 Just hover—no clicks, no commands, no context switching.
@@ -150,8 +150,8 @@ vsce publish
 
 ## 🤝 Related
 
-- **[TimeLens Core](https://github.com/rifen/timelens-core)** — Shared detection/formatting logic (`@rifen/timelens-core`)
-- **[TimeLens Neovim](https://github.com/rifen/timelens-nvim)** — Same functionality for Neovim
+- **[TimeScope Core](https://github.com/rifen/timelens-core)** — Shared detection/formatting logic (`@rifen/timelens-core`)
+- **[TimeScope Neovim](https://github.com/rifen/timelens-nvim)** — Same functionality for Neovim
 - **[Monorepo](https://github.com/rifen/timelens-mono)** — All packages in one repo
 
 ---
@@ -162,8 +162,8 @@ MIT — Free for personal and commercial use.
 
 ---
 
-## 💡 Why "TimeLens"?
+## 💡 Why "TimeScope"?
 
-Like a lens reveals what's invisible to the naked eye, TimeLens reveals the *meaning* hidden inside raw numbers. 
+Like a lens reveals what's invisible to the naked eye, TimeScope reveals the *meaning* hidden inside raw numbers. 
 No more mental math: `900` → `15 minutes`, `300000` → `5 minutes`, `86400` → `1 day`. 
 Instant clarity for timeouts, intervals, TTLs, and every other duration hiding in your code.

@@ -2,7 +2,7 @@ export { detectDuration, scanCode } from './detection';
 export { toMilliseconds, formatDuration, formatDurationFull, evaluateExpression } from './formatting';
 export { toGCF, toGenericGCF, toGraphGCF } from './gcf';
 export {
-  TimeLensSettings,
+  TimeScopeSettings,
   DetectedDuration,
   DetectedItem,
   ScanResult,

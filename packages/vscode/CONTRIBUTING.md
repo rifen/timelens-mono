@@ -1,6 +1,6 @@
-# Contributing to TimeLens
+# Contributing to TimeScope
 
-Thank you for your interest in contributing to TimeLens!
+Thank you for your interest in contributing to TimeScope!
 
 ## Development Setup
 

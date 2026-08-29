@@ -1,6 +1,6 @@
-# TimeLens — TODO
+# TimeScope — TODO
 
-Ideas and planned improvements for TimeLens.
+Ideas and planned improvements for TimeScope.
 
 ---
 
@@ -8,7 +8,7 @@ Ideas and planned improvements for TimeLens.
 
 ### Problem
 
-Right now, TimeLens only converts **bare integer literals** on hover.
+Right now, TimeScope only converts **bare integer literals** on hover.
 
 ```python
 # ✅ Works today

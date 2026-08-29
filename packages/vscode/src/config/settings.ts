@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-export interface TimeLensSettings {
+export interface TimeScopeSettings {
   enabled: boolean;
   defaultUnit: 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds' | 'auto';
   format: 'compact' | 'verbose' | 'both';
@@ -14,7 +14,7 @@ export interface TimeLensSettings {
   keywords: string[];
 }
 
-const DEFAULTS: TimeLensSettings = {
+const DEFAULTS: TimeScopeSettings = {
   enabled: true,
   defaultUnit: 'seconds',
   format: 'compact',
@@ -38,7 +38,7 @@ const DEFAULTS: TimeLensSettings = {
   ]
 };
 
-export function getSettings(): TimeLensSettings {
+export function getSettings(): TimeScopeSettings {
   const config = vscode.workspace.getConfiguration('timelens');
   
   return {

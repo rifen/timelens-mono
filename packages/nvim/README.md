@@ -1,8 +1,8 @@
-# TimeLens — Neovim Plugin
+# TimeScope — Neovim Plugin
 
 **Hover any integer duration → see human-readable time instantly.**
 
-TimeLens eliminates the mental math of converting raw numbers (seconds, milliseconds, nanoseconds) into readable durations. Perfect for HTTP timeouts, retry intervals, TTLs, cache configs, cron schedules, and any numeric time value in your code.
+TimeScope eliminates the mental math of converting raw numbers (seconds, milliseconds, nanoseconds) into readable durations. Perfect for HTTP timeouts, retry intervals, TTLs, cache configs, cron schedules, and any numeric time value in your code.
 
 ## Requirements
 
@@ -20,8 +20,8 @@ return {
   version = '^0.1.0',
   event = 'VeryLazy',
   keys = {
-    { '<leader>tl', desc = 'TimeLens: toggle' },
-    { '<leader>tr', desc = 'TimeLens: refresh' },
+    { '<leader>tl', desc = 'TimeScope: toggle' },
+    { '<leader>tr', desc = 'TimeScope: refresh' },
   },
   opts = {
     format = 'compact',
@@ -104,8 +104,8 @@ return {
   version = '^0.1.0',
   event = 'VeryLazy',
   keys = {
-    { '<leader>tl', desc = 'TimeLens: toggle' },
-    { '<leader>tr', desc = 'TimeLens: refresh' },
+    { '<leader>tl', desc = 'TimeScope: toggle' },
+    { '<leader>tr', desc = 'TimeScope: refresh' },
   },
   opts = {
     format = 'compact',
@@ -120,6 +120,6 @@ return {
 
 ## Related
 
-- **[TimeLens VS Code](https://github.com/rifen/timelens-mono#readme)** — Hover provider for VS Code
-- **[TimeLens Core](https://github.com/rifen/timelens-core)** — Shared detection/formatting library
+- **[TimeScope VS Code](https://github.com/rifen/timelens-mono#readme)** — Hover provider for VS Code
+- **[TimeScope Core](https://github.com/rifen/timelens-core)** — Shared detection/formatting library
 - **[Monorepo](https://github.com/rifen/timelens-mono)** — All packages in one repo

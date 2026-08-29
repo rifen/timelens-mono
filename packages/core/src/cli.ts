@@ -5,7 +5,7 @@ import * as path from 'path';
 import { scanCode, detectDuration } from './detection';
 import { formatDurationFull } from './formatting';
 import { toGCF } from './gcf';
-import { ScanResult, TimeLensSettings, DEFAULT_SETTINGS } from './types';
+import { ScanResult, TimeScopeSettings, DEFAULT_SETTINGS } from './types';
 
 const SUPPORTED_EXTENSIONS = new Set([
   '.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs',
@@ -20,7 +20,7 @@ const IGNORED_DIRS = new Set([
 
 function printHelp(): void {
   console.log(`
-TimeLens CLI - AI-native code duration detection & GCF compression
+TimeScope CLI - AI-native code duration detection & GCF compression
 
 Usage:
   timelens scan <file-or-dir> [options]
@@ -52,13 +52,13 @@ function parseArgs(args: string[]): {
   target?: string;
   format: 'gcf' | 'json' | 'text';
   profile: 'generic' | 'graph';
-  settings: Partial<TimeLensSettings>;
+  settings: Partial<TimeScopeSettings>;
 } {
   let command = 'help';
   let target: string | undefined;
   let format: 'gcf' | 'json' | 'text' = 'gcf';
   let profile: 'generic' | 'graph' = 'generic';
-  const settings: Partial<TimeLensSettings> = {};
+  const settings: Partial<TimeScopeSettings> = {};
 
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
@@ -91,7 +91,7 @@ function parseArgs(args: string[]): {
     }
 
     if (arg.startsWith('--unit=')) {
-      const u = arg.split('=')[1] as TimeLensSettings['defaultUnit'];
+      const u = arg.split('=')[1] as TimeScopeSettings['defaultUnit'];
       settings.defaultUnit = u;
       continue;
     }

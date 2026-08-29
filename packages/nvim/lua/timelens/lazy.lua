@@ -1,4 +1,4 @@
--- Lazy.nvim plugin spec for TimeLens
+-- Lazy.nvim plugin spec for TimeScope
 -- Add this to your lazy.nvim config:
 
 return {
@@ -17,7 +17,7 @@ return {
     show_unit_label = true,
   },
   keys = {
-    { '<leader>tl', desc = 'TimeLens: toggle hover' },
+    { '<leader>tl', desc = 'TimeScope: toggle hover' },
   },
   config = function(_, opts)
     require('timelens').setup(opts)

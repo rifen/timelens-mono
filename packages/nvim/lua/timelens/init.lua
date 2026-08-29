@@ -1,4 +1,4 @@
--- TimeLens Neovim Plugin
+-- TimeScope Neovim Plugin
 -- Hover over integer durations to see human-readable time
 
 local M = {}
