@@ -10,7 +10,7 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@rifen/timelens-core": "workspace:*"
+    "@rifen/timescope-core": "workspace:*"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",

@@ -7,7 +7,7 @@
  * Returns JSON on stdout: { text: string, hint?: string } | null
  */
 
-import { detectDuration, formatDurationFull } from '@rifen/timelens-core';
+import { detectDuration, formatDurationFull } from '@rifen/timescope-core';
 import * as readline from 'readline';
 
 const rl = readline.createInterface({

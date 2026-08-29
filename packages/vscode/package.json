@@ -39,7 +39,7 @@
   },
   "homepage": "https://github.com/rifen/timescope#readme",
   "dependencies": {
-    "@rifen/timelens-core": "workspace:*"
+    "@rifen/timescope-core": "workspace:*"
   },
   "contributes": {
     "configuration": {
