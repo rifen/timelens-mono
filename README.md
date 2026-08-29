@@ -5,34 +5,40 @@
 TimeScope is a cross-editor tool that eliminates mental math by hovering over numeric durations and revealing their human-readable meaning.
 
 <p align="center">
-  <img src="timescope-icon.jpg" alt="TimeScope icon" width="120" />
+  <img src="timescope.jpeg" alt="TimeScope demo" width="600" />
 </p>
 
-<p align="center">
-  <img src="timescope.jpeg" alt="TimeScope demo" />
-</p>
+## Install
 
-## Packages
+### VS Code
 
-| Package | Description | Status |
-|---------|-------------|--------|
-| **[VS Code Extension](./packages/vscode/)** | Hover provider for VS Code | ✅ v0.1.1 (`rifen.timescope`) |
-| **[Neovim Plugin](./packages/nvim/)** | Bridge-based hover for Neovim | ✅ v0.1.0 |
-| **[Core Library](./packages/core/)** | Shared detection/formatting logic | ✅ v0.1.1 |
+Install [`rifen.timescope`](https://marketplace.visualstudio.com/items?itemName=rifen.timescope) from the VS Code Marketplace, or install the `.vsix` from [Releases](https://github.com/rifen/timescope/releases).
+
+### Neovim (lazy.nvim)
+
+```lua
+return {
+  'rifen/timescope.nvim',
+  version = '*',
+  opts = {
+    format = 'compact',
+  },
+}
+```
 
 ## Quick Start
 
-```bash
-# Clone and install
-git clone https://github.com/rifen/timescope.git
-cd timescope
-pnpm install
+```lua
+-- Neovim (init.lua)
+require('timescope').setup({})
+```
 
-# Build all packages
-pnpm build
-
-# Run tests
-pnpm test
+```json
+// VS Code (settings.json)
+{
+  "timescope.enabled": true,
+  "timescope.format": "compact"
+}
 ```
 
 ## Features
@@ -77,61 +83,19 @@ http.Client{Timeout: 15 * time.Second}  # → "15s"
 }
 ```
 
-### Neovim (lazy.nvim)
+### Neovim
 
 ```lua
-return {
-  'rifen/timelens-nvim',
-  version = '^0.1.0',
-  event = 'VeryLazy',
-  opts = {
-    format = 'compact',
-    context_clues = true,
-  },
-}
-```
-
-## Development
-
-```bash
-# Build all packages
-pnpm build
-
-# Run tests (73 total)
-pnpm test
-
-# Package VS Code extension
-pnpm --filter timelens-vscode run package
-```
-
-## Publishing
-
-### VS Code Marketplace
-
-```bash
-# Create PAT with Publish scope
-export VSCE_PAT=<your-token>
-
-# Login
-vsce login rifen
-
-# Publish
-cd packages/vscode
-vsce publish -p $VSCE_PAT
-```
-
-### npm (Core)
-
-```bash
-cd packages/core
-npm publish --access public
+require('timescope').setup({
+  format = 'compact',
+  context_clues = true,
+})
 ```
 
 ## Links
 
 - **GitHub**: https://github.com/rifen/timescope
-- **VS Code Marketplace**: (coming soon)
-- **npm**: [@rifen/timelens-core](https://www.npmjs.com/package/@rifen/timelens-core)
+- **VS Code Marketplace**: https://marketplace.visualstudio.com/items?itemName=rifen.timescope
 
 ## License
 
