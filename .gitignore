@@ -31,3 +31,4 @@ pnpm-debug.log*
 
 # VS Code extension packaging
 *.vsix
+package-lock.json
