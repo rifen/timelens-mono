@@ -8,7 +8,7 @@ TimeLens is a cross-editor tool that eliminates mental math by hovering over num
 
 | Package | Description | Status |
 |---------|-------------|--------|
-| **[VS Code Extension](./packages/vscode/)** | Hover provider for VS Code | ✅ v0.1.1 |
+| **[VS Code Extension](./packages/vscode/)** | Hover provider for VS Code | ✅ v0.1.1 (`rifen.timelens`) |
 | **[Neovim Plugin](./packages/nvim/)** | Bridge-based hover for Neovim | ✅ v0.1.0 |
 | **[Core Library](./packages/core/)** | Shared detection/formatting logic | ✅ v0.1.1 |
 
@@ -105,7 +105,7 @@ pnpm --filter timelens-vscode run package
 export VSCE_PAT=<your-token>
 
 # Login
-vsce login timelens
+vsce login rifen
 
 # Publish
 cd packages/vscode

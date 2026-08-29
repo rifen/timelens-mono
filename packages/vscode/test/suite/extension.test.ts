@@ -9,7 +9,7 @@ suite('Extension Test Suite', () => {
   
   test('TimeLens hover provider is registered', async () => {
     // Test that the extension activates without errors
-    const ext = vscode.extensions.getExtension('timelens.timelens');
+    const ext = vscode.extensions.getExtension('rifen.timelens');
     if (ext) {
       await ext.activate();
       assert.strictEqual(ext.isActive, true);

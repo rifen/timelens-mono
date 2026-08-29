@@ -68,7 +68,7 @@ interval: 3600000             # → "1 hour"
 code --install-extension timelens-vscode-0.1.1.vsix
 
 # Or from VS Code Marketplace (after publication)
-# Extension ID: timelens.timelens
+# Extension ID: rifen.timelens
 ```
 
 ---
