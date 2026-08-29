@@ -1,4 +1,4 @@
-import { detectDuration, formatDurationFull, TimeLensSettings, DEFAULT_SETTINGS } from '../index';
+import { detectDuration, formatDurationFull, type TimeScopeSettings, DEFAULT_SETTINGS } from '../index';
 
 interface TestCase {
   line: string;
@@ -62,7 +62,7 @@ function extractCandidate(line: string, charPos: number): { token: string; start
   }
 
   // Second, try to find key=value patterns: key=value
-  const kvMatch = line.match(/([A-Za-z_][A-Za-z0-9_]*)\s*=\s*([\d\.]+)/);
+  const kvMatch = line.match(/([A-Za-z_][A-Za-z0-9_]*)\s*=\s*([\d.]+)/);
   if (kvMatch) {
     const [, key, value] = kvMatch;
     const keyStart = line.indexOf(key);
@@ -94,7 +94,7 @@ function extractCandidate(line: string, charPos: number): { token: string; start
     if (charPos >= funcStart && charPos <= funcEnd + args.length + 2) { // +2 for parentheses
       // For simplicity, if there's only one argument that's a number, return it
       const argList = args.split(',').map(a => a.trim());
-      if (argList.length === 1 && /^[\d\.]+$/.test(argList[0])) {
+      if (argList.length === 1 && /^[\d.]+$/.test(argList[0])) {
         const token = argList[0];
         const tokenStart = argsStart + args.indexOf(token);
         return { token, start: tokenStart, end: tokenStart + token.length };
@@ -121,11 +121,11 @@ function getWordRangeAtPosition(line: string, charPos: number): { start: number;
   let start = charPos;
   let end = charPos;
 
-  while (start > 0 && /[\w\.\$\*]/.test(line[start - 1])) {
+  while (start > 0 && /[\w.$*]/.test(line[start - 1])) {
     start--;
   }
 
-  while (end < line.length && /[\w\.\$\*]/.test(line[end])) {
+  while (end < line.length && /[\w.$*]/.test(line[end])) {
     end++;
   }
 
@@ -138,7 +138,7 @@ function findContainingExpression(
   wordStart: number,
   wordEnd: number
 ): { expression: string; start: number; end: number } | null {
-  const operators = /[\+\-\*\/\(\)]/;
+  const operators = /[+\-*/()]/;
 
   let start = wordStart;
   let end = wordEnd;
@@ -154,7 +154,7 @@ function findContainingExpression(
       }
       break;
     }
-    if (operators.test(char) || /[\w\.]/.test(char)) {
+    if (operators.test(char) || /[\w.]/.test(char)) {
       start--;
       continue;
     }
@@ -172,7 +172,7 @@ function findContainingExpression(
       }
       break;
     }
-    if (operators.test(char) || /[\w\.]/.test(char)) {
+    if (operators.test(char) || /[\w.]/.test(char)) {
       end++;
       continue;
     }
@@ -180,14 +180,14 @@ function findContainingExpression(
   }
 
   const expression = line.substring(start, end);
-  if (/[\+\-\*\/]/.test(expression)) {
+  if (/[+\-*/]/.test(expression)) {
     return { expression, start, end };
   }
 
   return null;
 }
 
-const settings: TimeLensSettings = { ...DEFAULT_SETTINGS };
+const settings: TimeScopeSettings = { ...DEFAULT_SETTINGS };
 
 describe('Automated Hover Tests', () => {
   testCases.forEach(tc => {
