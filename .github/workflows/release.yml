@@ -23,11 +23,8 @@ jobs:
         with:
           version: 9.15.4
 
-      - name: Debug environment
-        run: echo "DEBUG: Node $(node -v), PNPM $(pnpm -v)"
-
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
 
       - name: Build core
         run: pnpm --filter @rifen/timelens-core run build
