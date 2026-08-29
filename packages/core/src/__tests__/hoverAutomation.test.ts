@@ -1,4 +1,9 @@
-import { detectDuration, formatDurationFull, type TimeScopeSettings, DEFAULT_SETTINGS } from '../index';
+import {
+  detectDuration,
+  formatDurationFull,
+  type TimeScopeSettings,
+  DEFAULT_SETTINGS,
+} from "../index";
 
 interface TestCase {
   line: string;
@@ -11,44 +16,124 @@ interface TestCase {
 
 const testCases: TestCase[] = [
   // === Core functionality that works ===
-  { line: 'INTERVAL = 60 * 60', cursorChar: 7, expectedToken: '60 * 60', expectedFormat: '1h', expectedHint: 'INTERVAL', description: 'Variable assignment with expression' },
-  { line: 'TIMEOUT_SECONDS = 900', cursorChar: 15, expectedToken: '900', expectedFormat: '15m', expectedHint: 'TIMEOUT_SECONDS', description: 'Variable with keyword suffix' },
-  { line: 'RETRY_DELAY_S = 2', cursorChar: 7, expectedToken: '2', expectedFormat: '2s', expectedHint: 'RETRY_DELAY_S', description: '_S suffix' },
-  { line: 'MIN_TIMEOUT_MILLISECONDS = 500', cursorChar: 15, expectedToken: '500', expectedFormat: '500ms', expectedHint: 'MIN_TIMEOUT_MILLISECONDS', description: 'MILLISECONDS suffix' },
+  {
+    line: "INTERVAL = 60 * 60",
+    cursorChar: 7,
+    expectedToken: "60 * 60",
+    expectedFormat: "1h",
+    expectedHint: "INTERVAL",
+    description: "Variable assignment with expression",
+  },
+  {
+    line: "TIMEOUT_SECONDS = 900",
+    cursorChar: 15,
+    expectedToken: "900",
+    expectedFormat: "15m",
+    expectedHint: "TIMEOUT_SECONDS",
+    description: "Variable with keyword suffix",
+  },
+  {
+    line: "RETRY_DELAY_S = 2",
+    cursorChar: 7,
+    expectedToken: "2",
+    expectedFormat: "2s",
+    expectedHint: "RETRY_DELAY_S",
+    description: "_S suffix",
+  },
+  {
+    line: "MIN_TIMEOUT_MILLISECONDS = 500",
+    cursorChar: 15,
+    expectedToken: "500",
+    expectedFormat: "500ms",
+    expectedHint: "MIN_TIMEOUT_MILLISECONDS",
+    description: "MILLISECONDS suffix",
+  },
 
   // === Simple timeout variable (cursor on variable name) ===
-  { line: 'timeout = 10.0', cursorChar: 3, expectedToken: '10.0', expectedFormat: '10s', expectedHint: 'timeout', description: 'Simple timeout variable on name' },
+  {
+    line: "timeout = 10.0",
+    cursorChar: 3,
+    expectedToken: "10.0",
+    expectedFormat: "10s",
+    expectedHint: "timeout",
+    description: "Simple timeout variable on name",
+  },
 
   // === Retry patterns - note: retry keywords default to milliseconds ===
-  { line: 'retry_after = 60', cursorChar: 5, expectedToken: '60', expectedFormat: '60ms', expectedHint: 'retry', description: 'retry_after defaults to milliseconds' },
+  {
+    line: "retry_after = 60",
+    cursorChar: 5,
+    expectedToken: "60",
+    expectedFormat: "60ms",
+    expectedHint: "retry",
+    description: "retry_after defaults to milliseconds",
+  },
 
   // === Function calls with numeric args ===
-  { line: 'setTimeout(callback, 3000)', cursorChar: 21, expectedToken: '3000', expectedFormat: '50m', expectedHint: 'setTimeout', description: 'setTimeout detects timeout → seconds (3000s = 50m)' },
-  { line: 'time.sleep(2.5)', cursorChar: 12, expectedToken: '2.5', expectedFormat: '2ms', expectedHint: 'sleep', description: 'time.sleep detects sleep → milliseconds' },
+  {
+    line: "setTimeout(callback, 3000)",
+    cursorChar: 21,
+    expectedToken: "3000",
+    expectedFormat: "50m",
+    expectedHint: "setTimeout",
+    description: "setTimeout detects timeout → seconds (3000s = 50m)",
+  },
+  {
+    line: "time.sleep(2.5)",
+    cursorChar: 12,
+    expectedToken: "2.5",
+    expectedFormat: "2ms",
+    expectedHint: "sleep",
+    description: "time.sleep detects sleep → milliseconds",
+  },
 
   // === Port patterns - cursor must be on variable name or value ===
-  { line: 'PORT = 8080', cursorChar: 0, expectedToken: '8080', expectedFormat: '2h 14m', description: 'Port (not epoch) should show' },
+  {
+    line: "PORT = 8080",
+    cursorChar: 0,
+    expectedToken: "8080",
+    expectedFormat: "2h 14m",
+    description: "Port (not epoch) should show",
+  },
 
   // === Ignored patterns (should show null) ===
-  { line: 'DATE = 2024-01-15', cursorChar: 5, expectedToken: null, description: 'DATE ignored' },
-  { line: 'IP = 192.168.1.1', cursorChar: 3, expectedToken: null, description: 'IP ignored' },
+  {
+    line: "DATE = 2024-01-15",
+    cursorChar: 5,
+    expectedToken: null,
+    description: "DATE ignored",
+  },
+  {
+    line: "IP = 192.168.1.1",
+    cursorChar: 3,
+    expectedToken: null,
+    description: "IP ignored",
+  },
 ];
 
 function stripComments(expr: string): string {
-  let result = expr.replace(/\s*#[^\n]*/g, '');
-  result = result.replace(/\s*\/\/.*$/gm, '');
-  result = result.replace(/\/\*[\s\S]*?\*\//g, '');
+  let result = expr.replace(/\s*#[^\n]*/g, "");
+  result = result.replace(/\s*\/\/.*$/gm, "");
+  result = result.replace(/\/\*[\s\S]*?\*\//g, "");
   return result.trim();
 }
 
-function extractCandidate(line: string, charPos: number): { token: string; start: number; end: number } | null {
+function extractCandidate(
+  line: string,
+  charPos: number,
+): { token: string; start: number; end: number } | null {
   // First, try to find a variable assignment pattern: NAME = EXPRESSION
-  const assignmentMatch = line.match(/^(\s*)([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.+)$/);
+  const assignmentMatch = line.match(
+    /^(\s*)([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.+)$/,
+  );
   if (assignmentMatch) {
     const [, leading, varName, expression] = assignmentMatch;
     const varStart = leading.length;
     const varEnd = varStart + varName.length;
-    const exprStart = varEnd + (assignmentMatch[0].length - (leading.length + varName.length + expression.length));
+    const exprStart =
+      varEnd +
+      (assignmentMatch[0].length -
+        (leading.length + varName.length + expression.length));
 
     // Check if cursor is on the variable name
     if (charPos >= varStart && charPos <= varEnd) {
@@ -57,7 +142,11 @@ function extractCandidate(line: string, charPos: number): { token: string; start
 
     // Check if cursor is on or near the expression
     if (charPos >= exprStart && charPos <= exprStart + expression.length) {
-      return { token: expression.trim(), start: exprStart, end: exprStart + expression.length };
+      return {
+        token: expression.trim(),
+        start: exprStart,
+        end: exprStart + expression.length,
+      };
     }
   }
 
@@ -91,9 +180,10 @@ function extractCandidate(line: string, charPos: number): { token: string; start
     const argsEnd = argsStart + args.length; // before ')'
 
     // Check if cursor is inside the function call
-    if (charPos >= funcStart && charPos <= funcEnd + args.length + 2) { // +2 for parentheses
+    if (charPos >= funcStart && charPos <= funcEnd + args.length + 2) {
+      // +2 for parentheses
       // For simplicity, if there's only one argument that's a number, return it
-      const argList = args.split(',').map(a => a.trim());
+      const argList = args.split(",").map((a) => a.trim());
       if (argList.length === 1 && /^[\d.]+$/.test(argList[0])) {
         const token = argList[0];
         const tokenStart = argsStart + args.indexOf(token);
@@ -109,15 +199,26 @@ function extractCandidate(line: string, charPos: number): { token: string; start
   const word = line.substring(wordRange.start, wordRange.end);
 
   // Check if this word is part of an arithmetic expression
-  const expressionMatch = findContainingExpression(line, wordRange.start, wordRange.end);
+  const expressionMatch = findContainingExpression(
+    line,
+    wordRange.start,
+    wordRange.end,
+  );
   if (expressionMatch) {
-    return { token: expressionMatch.expression.trim(), start: expressionMatch.start, end: expressionMatch.end };
+    return {
+      token: expressionMatch.expression.trim(),
+      start: expressionMatch.start,
+      end: expressionMatch.end,
+    };
   }
 
   return { token: word, start: wordRange.start, end: wordRange.end };
 }
 
-function getWordRangeAtPosition(line: string, charPos: number): { start: number; end: number } | null {
+function getWordRangeAtPosition(
+  line: string,
+  charPos: number,
+): { start: number; end: number } | null {
   let start = charPos;
   let end = charPos;
 
@@ -136,7 +237,7 @@ function getWordRangeAtPosition(line: string, charPos: number): { start: number;
 function findContainingExpression(
   line: string,
   wordStart: number,
-  wordEnd: number
+  wordEnd: number,
 ): { expression: string; start: number; end: number } | null {
   const operators = /[+\-*/()]/;
 
@@ -189,8 +290,8 @@ function findContainingExpression(
 
 const settings: TimeScopeSettings = { ...DEFAULT_SETTINGS };
 
-describe('Automated Hover Tests', () => {
-  testCases.forEach(tc => {
+describe("Automated Hover Tests", () => {
+  testCases.forEach((tc) => {
     it(tc.description, () => {
       const candidate = extractCandidate(tc.line, tc.cursorChar);
 
@@ -209,11 +310,15 @@ describe('Automated Hover Tests', () => {
           const duration = detectDuration(sanitized, tc.line, settings);
           expect(duration).not.toBeNull();
           if (duration) {
-            const formatted = formatDurationFull(duration.value, duration.unit, {
-              format: settings.format,
-              showBreakdown: settings.showBreakdown,
-              showUnitLabel: settings.showUnitLabel
-            });
+            const formatted = formatDurationFull(
+              duration.value,
+              duration.unit,
+              {
+                format: settings.format,
+                showBreakdown: settings.showBreakdown,
+                showUnitLabel: settings.showUnitLabel,
+              },
+            );
 
             if (tc.expectedFormat) {
               expect(formatted).toBe(tc.expectedFormat);

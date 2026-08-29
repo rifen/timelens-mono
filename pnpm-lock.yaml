@@ -39,7 +39,7 @@ importers:
 
   packages/nvim:
     dependencies:
-      '@rifen/timelens-core':
+      '@rifen/timescope-core':
         specifier: workspace:*
         version: link:../core
       neovim:
@@ -67,7 +67,7 @@ importers:
 
   packages/vscode:
     dependencies:
-      '@rifen/timelens-core':
+      '@rifen/timescope-core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
