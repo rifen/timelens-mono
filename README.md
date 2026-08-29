@@ -1,14 +1,22 @@
-# TimeLens Monorepo
+# TimeScope
 
 **Hover any integer duration → see human-readable time instantly.**
 
-TimeLens is a cross-editor tool that eliminates mental math by hovering over numeric durations and revealing their human-readable meaning.
+TimeScope is a cross-editor tool that eliminates mental math by hovering over numeric durations and revealing their human-readable meaning.
+
+<p align="center">
+  <img src="timescope-icon.jpg" alt="TimeScope icon" width="120" />
+</p>
+
+<p align="center">
+  <img src="timescope.jpeg" alt="TimeScope demo" />
+</p>
 
 ## Packages
 
 | Package | Description | Status |
 |---------|-------------|--------|
-| **[VS Code Extension](./packages/vscode/)** | Hover provider for VS Code | ✅ v0.1.1 (`rifen.timelens`) |
+| **[VS Code Extension](./packages/vscode/)** | Hover provider for VS Code | ✅ v0.1.1 (`rifen.timescope`) |
 | **[Neovim Plugin](./packages/nvim/)** | Bridge-based hover for Neovim | ✅ v0.1.0 |
 | **[Core Library](./packages/core/)** | Shared detection/formatting logic | ✅ v0.1.1 |
 
@@ -16,7 +24,7 @@ TimeLens is a cross-editor tool that eliminates mental math by hovering over num
 
 ```bash
 # Clone and install
-git clone https://github.com/rifen/timelens-mono.git
+git clone https://github.com/rifen/timescope.git
 cd timescope
 pnpm install
 
@@ -62,10 +70,10 @@ http.Client{Timeout: 15 * time.Second}  # → "15s"
 
 ```json
 {
-  "timelens.enabled": true,
-  "timelens.format": "compact",
-  "timelens.defaultUnit": "seconds",
-  "timelens.contextClues": true
+  "timescope.enabled": true,
+  "timescope.format": "compact",
+  "timescope.defaultUnit": "seconds",
+  "timescope.contextClues": true
 }
 ```
 
@@ -121,7 +129,7 @@ npm publish --access public
 
 ## Links
 
-- **GitHub**: https://github.com/rifen/timelens-mono
+- **GitHub**: https://github.com/rifen/timescope
 - **VS Code Marketplace**: (coming soon)
 - **npm**: [@rifen/timelens-core](https://www.npmjs.com/package/@rifen/timelens-core)
 
