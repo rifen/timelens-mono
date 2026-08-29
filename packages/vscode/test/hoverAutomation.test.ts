@@ -92,7 +92,7 @@ function testExtractCandidate() {
     if (success && tc.expectedToken !== null && tc.expectedFormat) {
       // Test full detection
       const settings = getSettings();
-      const { detectDuration, formatDurationFull } = require('@rifen/timelens-core');
+      const { detectDuration, formatDurationFull } = require('@rifen/timescope-core');
       const duration = detectDuration(tc.expectedToken, tc.line, settings);
       
       if (!duration) {

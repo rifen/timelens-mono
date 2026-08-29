@@ -94,11 +94,9 @@ require('timescope').setup({
 
 ## Links
 
-- **GitHub**: https://github.com/rifen/timescope
-- **VS Code Marketplace**: https://marketplace.visualstudio.com/items?itemName=rifen.timescope
+- **GitHub**: <https://github.com/rifen/timescope>
+- **VS Code Marketplace**: <https://marketplace.visualstudio.com/items?itemName=rifen.timescope>
 
 ## License
 
 MIT
-
-

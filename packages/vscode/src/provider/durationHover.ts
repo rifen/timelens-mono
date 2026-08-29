@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { detectDuration, formatDurationFull } from '@rifen/timelens-core';
+import { detectDuration, formatDurationFull } from '@rifen/timescope-core';
 import { getSettings } from '../config/settings';
 
 export class DurationHoverProvider implements vscode.HoverProvider {
