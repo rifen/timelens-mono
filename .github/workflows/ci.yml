@@ -33,7 +33,7 @@ jobs:
         run: pnpm -r run build
 
       - name: Run core tests
-        run: pnpm --filter @rifen/timelens-core test
+        run: pnpm --filter @rifen/timescope-core test
 
   package:
     runs-on: ubuntu-latest
@@ -66,36 +66,5 @@ jobs:
       - name: Upload VSIX artifact
         uses: actions/upload-artifact@v4
         with:
-          name: timelens-vscode
+          name: timescope-vscode
           path: packages/vscode/*.vsix
-
-  publish-core:
-    runs-on: ubuntu-latest
-    needs: test
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js 22.x
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22.x
-          registry-url: 'https://registry.npmjs.org'
-          cache: 'pnpm'
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9.15.4
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build core
-        run: pnpm --filter @rifen/timelens-core run build
-
-      - name: Publish to npm
-        run: npm publish --access public
-        working-directory: packages/core
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
