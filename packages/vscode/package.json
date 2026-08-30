@@ -196,5 +196,5 @@
     "typescript": "^5.3.3",
     "vsce": "^2.15.0"
   },
-  "icon": "timescope.ico"
+  "icon": "extension/timescope.ico"
 }
