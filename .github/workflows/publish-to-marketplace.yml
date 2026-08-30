@@ -3,7 +3,7 @@ name: Publish VS Code Extension to Marketplace
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - "v*.*.*"
 
 jobs:
   publish:
@@ -14,8 +14,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
-          cache: 'pnpm'
+          node-version: "20.x"
+          cache: "pnpm"
 
       - name: Install pnpm
         run: npm install -g pnpm
@@ -28,7 +28,9 @@ jobs:
 
       - name: Publish to Visual Studio Marketplace
         env:
-          VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
         run: |
           cd packages/vscode
-          npx vsce publish --pat $VSCE_TOKEN
+          npx vsce publish --azure-tenantId $AZURE_TENANT_ID --azure-clientId $AZURE_CLIENT_ID --azure-clientSecret $AZURE_CLIENT_SECRET

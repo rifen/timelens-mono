@@ -53,7 +53,7 @@ stages:
         pool:
           vmImage: "ubuntu-latest"
         variables:
-        - group: vscode-publish-secrets
+          - group: vscode-publish-secrets
         steps:
           - download: current
             artifact: vsix
@@ -66,7 +66,5 @@ stages:
             displayName: "Install dependencies"
           - script: |
               cd packages/vscode
-              npx vsce publish --pat $(VSCE_TOKEN)
+              npx vsce publish --azure-tenantId $(AZURE_TENANT_ID) --azure-clientId $(AZURE_CLIENT_ID) --azure-clientSecret $(AZURE_CLIENT_SECRET)
             displayName: "Publish to Marketplace"
-            env:
-              VSCE_TOKEN: $(VSCE_TOKEN)
