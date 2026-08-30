@@ -3,6 +3,8 @@ name: Test
 on:
   push:
     branches: [main, master]
+  pull_request:
+    branches: [main, master]
 
 jobs:
   test:
@@ -18,4 +20,8 @@ jobs:
         with:
           version: 9.15.4
       - name: Install dependencies
-        run: pnpm install --ignore-scripts
+        run: pnpm install --frozen-lockfile
+      - name: Build all packages
+        run: pnpm -r run build
+      - name: Run tests
+        run: pnpm --filter @rifen/timescope-core test

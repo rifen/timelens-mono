@@ -1,8 +1,9 @@
-# TimeScope Core (`@rifen/timelens-core`)
+# TimeScope Core (`@rifen/timescope-core`)
 
 **Shared detection, formatting, and AI-native GCF serialization for TimeScope.**
 
 The core library powers both the VS Code extension and Neovim plugin. It provides:
+
 - Duration detection from context (variable names, comments, file type)
 - Expression evaluation (`60 * 60 * 24` → `86400`)
 - Human-readable formatting (compact, verbose, or both)
@@ -11,7 +12,7 @@ The core library powers both the VS Code extension and Neovim plugin. It provide
 ## Installation
 
 ```bash
-npm install @rifen/timelens-core
+npm install @rifen/timescope-core
 ```
 
 ## Monorepo
@@ -30,7 +31,7 @@ pnpm build
 ### 1. Basic Detection & Formatting
 
 ```typescript
-import { detectDuration, formatDurationFull } from '@rifen/timelens-core';
+import { detectDuration, formatDurationFull } from '@rifen/timescope-core';
 
 const result = detectDuration('900', 'TIMEOUT_SECONDS = 900');
 if (result) {
@@ -46,7 +47,7 @@ if (result) {
 ### 2. Expression Evaluation
 
 ```typescript
-import { evaluateExpression } from '@rifen/timelens-core';
+import { evaluateExpression } from '@rifen/timescope-core';
 
 const value = evaluateExpression('60 * 60 * 24');
 console.log(value); // 86400
@@ -55,7 +56,7 @@ console.log(value); // 86400
 ### 3. Code Scanning & GCF Serialization
 
 ```typescript
-import { scanCode, toGCF } from '@rifen/timelens-core';
+import { scanCode, toGCF } from '@rifen/timescope-core';
 
 const code = `
 const TIMEOUT_SECONDS = 900;
@@ -70,13 +71,13 @@ const gcfText = toGCF(scan);
 
 ```bash
 # Scan files with GCF output (default)
-npx @rifen/timelens-core scan src/ --format=gcf
+npx @rifen/timescope-core scan src/ --format=gcf
 
 # Scan with human-readable text
-npx @rifen/timelens-core scan src/ --format=text
+npx @rifen/timescope-core scan src/ --format=text
 
 # Parse single expressions
-npx @rifen/timelens-core parse "60 * 60 * 24"
+npx @rifen/timescope-core parse "60 * 60 * 24"
 ```
 
 ## Integration
@@ -88,10 +89,9 @@ npx @rifen/timelens-core parse "60 * 60 * 24"
 ## API Reference
 
 | Export | Description |
-|--------|-------------|
+| -------- | ------------- |
 | `detectDuration(token, line)` | Detect duration from token + context line |
 | `formatDurationFull(value, unit, opts)` | Format to string with options |
 | `evaluateExpression(expr)` | Safe arithmetic evaluator |
 | `scanCode(code, filename)` | Scan source for durations |
 | `toGCF(scanResult)` | Serialize to GCF format |
-

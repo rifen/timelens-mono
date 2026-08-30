@@ -4,4 +4,4 @@ allowBuilds:
   keytar: true
   node: true
 minimumReleaseAgeExclude:
-  - '@rifen/timelens-core@0.1.0 || 0.1.1'
+  - "@rifen/timescope-core@0.1.0 || 0.1.1"

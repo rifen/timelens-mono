@@ -10,7 +10,7 @@
     "test": "pnpm -r run test",
     "lint": "pnpm -r run lint",
     "timescope": "node packages/core/dist/cli.js",
-    "package:core": "pnpm --filter @rifen/timelens-core run build",
+    "package:core": "pnpm --filter @rifen/timescope-core run build",
     "package:vscode": "pnpm --filter timelens-vscode run package",
     "package:nvim": "pnpm --filter timelens-nvim run build"
   },

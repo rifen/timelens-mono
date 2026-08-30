@@ -6,7 +6,7 @@ TimeScope eliminates the mental math of converting raw numbers (seconds, millise
 
 ## Requirements
 
-- **Node.js 18+** (for `@rifen/timelens-core` bridge)
+- **Node.js 18+** (for `@rifen/timescope-core` bridge)
 - **Neovim 0.7+**
 
 ## Installation
@@ -51,7 +51,7 @@ use {
 
 1. On `CursorMoved`, the plugin extracts the token under the cursor
 2. Spawns a Node.js bridge process (`bin/bridge.js`)
-3. Bridge imports `@rifen/timelens-core`, runs detection + formatting
+3. Bridge imports `@rifen/timescope-core`, runs detection + formatting
 4. Returns formatted duration as JSON
 5. Plugin renders virtual text with the result
 
@@ -121,5 +121,5 @@ return {
 ## Related
 
 - **[TimeScope VS Code](https://github.com/rifen/timelens-mono#readme)** — Hover provider for VS Code
-- **[TimeScope Core](https://github.com/rifen/timelens-core)** — Shared detection/formatting library
+- **[TimeScope Core](https://github.com/rifen/timescope-core)** — Shared detection/formatting library
 - **[Monorepo](https://github.com/rifen/timelens-mono)** — All packages in one repo

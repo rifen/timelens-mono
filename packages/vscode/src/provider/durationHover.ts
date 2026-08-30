@@ -1,6 +1,6 @@
-import * as vscode from 'vscode';
-import { detectDuration, formatDurationFull } from '@rifen/timescope-core';
-import { getSettings } from '../config/settings';
+import * as vscode from "vscode";
+import { detectDuration, formatDurationFull } from "@rifen/timescope-core";
+import { getSettings } from "../config/settings";
 
 export class DurationHoverProvider implements vscode.HoverProvider {
   private readonly log: (message: string, ...args: unknown[]) => void;
@@ -12,7 +12,7 @@ export class DurationHoverProvider implements vscode.HoverProvider {
   provideHover(
     document: vscode.TextDocument,
     position: vscode.Position,
-    _token: vscode.CancellationToken
+    _token: vscode.CancellationToken,
   ): vscode.Hover | null {
     const settings = getSettings();
     if (!settings.enabled) {
@@ -20,97 +20,136 @@ export class DurationHoverProvider implements vscode.HoverProvider {
     }
 
     const lineText = document.lineAt(position.line).text;
-    this.log('hover request', { line: position.line, char: position.character, lineText });
+    this.log("hover request", {
+      line: position.line,
+      char: position.character,
+      lineText,
+    });
 
-    const candidate = this.extractCandidate(lineText, position.character, position.line);
+    const candidate = this.extractCandidate(
+      lineText,
+      position.character,
+      position.line,
+    );
     if (!candidate) {
-      this.log('no candidate');
+      this.log("no candidate");
       return null;
     }
 
     const { token, range } = candidate;
     const sanitized = this.stripComments(token).trim();
-    this.log('sanitized token', sanitized);
+    this.log("sanitized token", sanitized);
 
     const duration = detectDuration(sanitized, lineText, settings);
     if (!duration) {
-      this.log('no detection result');
+      this.log("no detection result");
       return null;
     }
 
     const formatted = formatDurationFull(duration.value, duration.unit, {
       format: settings.format,
       showBreakdown: settings.showBreakdown,
-      showUnitLabel: settings.showUnitLabel
+      showUnitLabel: settings.showUnitLabel,
     });
 
     const lines = [formatted];
-    if (duration.source === 'context' && duration.contextHint) {
+    if (duration.source === "context" && duration.contextHint) {
       lines.push(`*inferred from ${duration.contextHint}*`);
     }
 
-    return new vscode.Hover(lines.join('\n'), range);
+    return new vscode.Hover(lines.join("\n"), range);
   }
 
   private extractCandidate(
     line: string,
     charPos: number,
-    lineNum: number
+    lineNum: number,
   ): { token: string; range: vscode.Range } | null {
-    this.log('extractCandidate', { line, charPos });
+    this.log("extractCandidate", { line, charPos });
 
-    const assignmentMatch = line.match(/^(\s*)([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.+)$/);
+    const assignmentMatch = line.match(
+      /^(\s*)([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.+)$/,
+    );
     if (assignmentMatch) {
       const [, leading, varName, expression] = assignmentMatch;
       const varStart = leading.length;
       const varEnd = varStart + varName.length;
-      const exprStart = varEnd + (assignmentMatch[0].length - (leading.length + varName.length + expression.length));
+      const exprStart =
+        varEnd +
+        (assignmentMatch[0].length -
+          (leading.length + varName.length + expression.length));
 
-      this.log('assignment match', { varName, expression, varStart, varEnd, exprStart, charPos });
+      this.log("assignment match", {
+        varName,
+        expression,
+        varStart,
+        varEnd,
+        exprStart,
+        charPos,
+      });
 
       if (charPos >= varStart && charPos <= varEnd) {
-        this.log('cursor on variable name');
+        this.log("cursor on variable name");
         return {
           token: expression.trim(),
-          range: new vscode.Range(new vscode.Position(lineNum, varStart), new vscode.Position(lineNum, varEnd))
+          range: new vscode.Range(
+            new vscode.Position(lineNum, varStart),
+            new vscode.Position(lineNum, varEnd),
+          ),
         };
       }
 
       if (charPos >= exprStart && charPos <= exprStart + expression.length) {
-        this.log('cursor on expression');
+        this.log("cursor on expression");
         return {
           token: expression.trim(),
-          range: new vscode.Range(new vscode.Position(lineNum, exprStart), new vscode.Position(lineNum, exprStart + expression.length))
+          range: new vscode.Range(
+            new vscode.Position(lineNum, exprStart),
+            new vscode.Position(lineNum, exprStart + expression.length),
+          ),
         };
       }
     }
 
     const wordRange = this.getWordRangeAtPosition(line, charPos);
     if (!wordRange) {
-      this.log('no word range');
+      this.log("no word range");
       return null;
     }
 
     const word = line.substring(wordRange.start, wordRange.end);
-    this.log('word range', wordRange, word);
+    this.log("word range", wordRange, word);
 
-    const expressionMatch = this.findContainingExpression(line, wordRange.start, wordRange.end);
+    const expressionMatch = this.findContainingExpression(
+      line,
+      wordRange.start,
+      wordRange.end,
+    );
     if (expressionMatch) {
-      this.log('expression match', expressionMatch);
+      this.log("expression match", expressionMatch);
       return {
         token: expressionMatch.expression.trim(),
-        range: new vscode.Range(new vscode.Position(lineNum, expressionMatch.start), new vscode.Position(lineNum, expressionMatch.end))
+        range: new vscode.Range(
+          new vscode.Position(lineNum, expressionMatch.start),
+          new vscode.Position(lineNum, expressionMatch.end),
+        ),
       };
     }
 
-    this.log('fallback to word');
+    this.log("fallback to word");
     return {
       token: word,
-      range: new vscode.Range(new vscode.Position(lineNum, wordRange.start), new vscode.Position(lineNum, wordRange.end))
+      range: new vscode.Range(
+        new vscode.Position(lineNum, wordRange.start),
+        new vscode.Position(lineNum, wordRange.end),
+      ),
     };
   }
 
-  private getWordRangeAtPosition(line: string, charPos: number): { start: number; end: number } | null {
+  private getWordRangeAtPosition(
+    line: string,
+    charPos: number,
+  ): { start: number; end: number } | null {
     let start = charPos;
     let end = charPos;
 
@@ -129,7 +168,7 @@ export class DurationHoverProvider implements vscode.HoverProvider {
   private findContainingExpression(
     line: string,
     wordStart: number,
-    wordEnd: number
+    wordEnd: number,
   ): { expression: string; start: number; end: number } | null {
     const operators = /[+\-*/()]/;
 
@@ -147,7 +186,7 @@ export class DurationHoverProvider implements vscode.HoverProvider {
         }
         break;
       }
-      if (operators.test(char) || /[\w.]/ .test(char)) {
+      if (operators.test(char) || /[\w.]/.test(char)) {
         start--;
         continue;
       }
@@ -165,7 +204,7 @@ export class DurationHoverProvider implements vscode.HoverProvider {
         }
         break;
       }
-      if (operators.test(char) || /[\w.]/ .test(char)) {
+      if (operators.test(char) || /[\w.]/.test(char)) {
         end++;
         continue;
       }
@@ -181,9 +220,9 @@ export class DurationHoverProvider implements vscode.HoverProvider {
   }
 
   private stripComments(expr: string): string {
-    let result = expr.replace(/\s*#[^\n]*/g, '');
-    result = result.replace(/\s*\/\/.*$/gm, '');
-    result = result.replace(/\/\*[\s\S]*?\*\//g, '');
+    let result = expr.replace(/\s*#[^\n]*/g, "");
+    result = result.replace(/\s*\/\/.*$/gm, "");
+    result = result.replace(/\/\*[\s\S]*?\*\//g, "");
     return result.trim();
   }
 }

@@ -14,6 +14,7 @@ When operating in agentic loops (Pi, Antigravity, Claude Code, etc.), TimeLens e
 ## When to Use This Skill
 
 Activate this skill when:
+
 - Auditing timeouts, intervals, rate limits, retry backoffs, or cache TTL configurations across a codebase.
 - Investigating timeout mismatch issues (e.g., frontend timeout < backend timeout, connection pool TTLs).
 - Refactoring hardcoded duration magic numbers into named constants or config parameters.
@@ -50,7 +51,7 @@ node packages/core/dist/cli.js parse "30000" --unit=milliseconds
 ### 3. Programmatic Usage in Scripts / Subagents
 
 ```typescript
-import { scanCode, toGCF, detectDuration, formatDurationFull } from '@rifen/timelens-core';
+import { scanCode, toGCF, detectDuration, formatDurationFull } from '@rifen/timescope-core';
 
 // Scan source code
 const scan = scanCode(sourceCode, 'server.ts');
