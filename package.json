@@ -1,6 +1,7 @@
 {
   "name": "timescope-mono",
   "version": "0.1.0",
+  "packageManager": "pnpm",
   "private": true,
   "workspaces": [
     "packages/*"
