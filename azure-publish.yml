@@ -2,69 +2,71 @@
 trigger:
   branches:
     include:
-    - master
+      - master
   tags:
     include:
-    - v*.*.*
+      - v*.*.*
 
 pr:
   branches:
     include:
-    - master
+      - master
 
 variables:
   # Node.js version
-  NODE_VERSION: '20.x'
+  NODE_VERSION: "20.x"
 
 stages:
-- stage: Build
-  displayName: Build Extension
-  jobs:
-  - job: build
-    displayName: Build and Test
-    pool:
-      vmImage: 'ubuntu-latest'
-    steps:
-    - task: NodeTool@0
-      inputs:
-        versionSpec: $(NODE_VERSION)
-    - script: |
-        npm install -g pnpm
-        pnpm install --frozen-lockfile
-      displayName: 'Install dependencies'
-    - script: |
-        pnpm --filter rifen-timescope run build
-      displayName: 'Build extension'
-    - script: |
-        cd packages/vscode
-        npx vsce package --no-dependencies
-      displayName: 'Package extension'
-    - publish: packages/vscode/*.vsix
-      artifact: vsix
-      displayName: 'Package VSIX'
+  - stage: Build
+    displayName: Build Extension
+    jobs:
+      - job: build
+        displayName: Build and Test
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: $(NODE_VERSION)
+          - script: |
+              npm install -g pnpm
+              pnpm install --frozen-lockfile
+            displayName: "Install dependencies"
+          - script: |
+              pnpm --filter rifen-timescope run build
+            displayName: "Build extension"
+          - script: |
+              cd packages/vscode
+              npx vsce package --no-dependencies
+            displayName: "Package extension"
+          - publish: packages/vscode/*.vsix
+            artifact: vsix
+            displayName: "Package VSIX"
 
-- stage: Publish
-  displayName: Publish to Marketplace
-  dependsOn: Build
-  condition: and(succeeded(), startsWith(variables['Build.SourceTag'], 'v'))
-  jobs:
-  - job: publish
-    displayName: Publish Extension
-    pool:
-      vmImage: 'ubuntu-latest'
-    steps:
-    - download: current
-      artifact: vsix
-    - task: NodeTool@0
-      inputs:
-        versionSpec: $(NODE_VERSION)
-    - script: |
-        npm install -g pnpm
-        pnpm install --frozen-lockfile
-      displayName: 'Install dependencies'
-    - script: |
-        cd packages/vscode
-        npx vsce publish --pat $(VSCE_TOKEN)
-      displayName: 'Publish to Marketplace'
-      env:
-        VSCE_TOKEN: $(VSCE_TOKEN)
+  - stage: Publish
+    displayName: Publish to Marketplace
+    dependsOn: Build
+    condition: and(succeeded(), startsWith(variables['Build.SourceTag'], 'v'))
+    jobs:
+      - job: publish
+        displayName: Publish Extension
+        pool:
+          vmImage: "ubuntu-latest"
+        variables:
+        - group: vscode-publish-secrets
+        steps:
+          - download: current
+            artifact: vsix
+          - task: NodeTool@0
+            inputs:
+              versionSpec: $(NODE_VERSION)
+          - script: |
+              npm install -g pnpm
+              pnpm install --frozen-lockfile
+            displayName: "Install dependencies"
+          - script: |
+              cd packages/vscode
+              npx vsce publish --pat $(VSCE_TOKEN)
+            displayName: "Publish to Marketplace"
+            env:
+              VSCE_TOKEN: $(VSCE_TOKEN)
