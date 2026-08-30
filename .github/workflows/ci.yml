@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [20.x, 22.x]
     steps:
       - uses: actions/checkout@v7
 
@@ -19,6 +19,7 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node-version }}
+          npm-version: latest
 
       - name: Install pnpm
         uses: pnpm/action-setup@v6
@@ -42,6 +43,7 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: 22.x
+          npm-version: latest
 
       - name: Install pnpm
         uses: pnpm/action-setup@v6
@@ -58,7 +60,7 @@ jobs:
           npx vsce package --no-dependencies
 
       - name: Upload VSIX artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: timescope-vscode
           path: packages/vscode/*.vsix
