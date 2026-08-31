@@ -65,6 +65,12 @@ jobs:
           cd packages/vscode
           npx vsce package
 
+      - name: Verify VSIX contents
+        run: |
+          VSIX=$(ls packages/vscode/*.vsix | head -n1)
+          echo "Checking $VSIX"
+          unzip -l "$VSIX" | grep -i "node_modules/@rifen/timescope-core/dist" || (echo "Core not bundled!" && exit 1)
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:

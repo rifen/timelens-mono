@@ -32,7 +32,8 @@ docs
 # **/node_modules/**
 !dist/**/*.js
 !dist/**/*.d.ts
-!node_modules/@rifen/timescope-core/**
+!node_modules/@rifen/timescope-core/dist/**
+!node_modules/@rifen/timescope-core/package.json
 
 # Exclude monorepo sibling packages (commented out to include core)
 # ../../packages/core/**
