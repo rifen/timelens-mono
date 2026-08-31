@@ -25,9 +25,8 @@ eslintrc.json
 *
 !node_modules/
 !node_modules/**
-!node_modules/**
-.gitignore
-.gitattributes
+
+
 # .github
 docs
 # **/node_modules/**
