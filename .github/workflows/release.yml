@@ -7,10 +7,10 @@ on:
 
 permissions:
   id-token: write
-  contents: read
+  contents: write
 
 jobs:
-  publish:
+  publish-core:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
@@ -35,3 +35,47 @@ jobs:
       - name: Publish to npm
         run: npm publish --provenance --access public
         working-directory: packages/core
+
+  publish-vscode:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22.x
+          check-latest: true
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build all packages
+        run: pnpm -r run build
+
+      - name: Package VS Code extension
+        run: |
+          cd packages/vscode
+          npx vsce package --no-dependencies
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: packages/vscode/*.vsix
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to VS Code Marketplace
+        if: env.VSCE_PAT != ''
+        run: |
+          cd packages/vscode
+          npx vsce publish -p $VSCE_PAT
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
