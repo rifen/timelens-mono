@@ -1,53 +1,18 @@
-# Exclude source maps
-*.map
-*.ts.map
-
-# Exclude test files
-test/
-src/test/
-**/*.test.ts
-
-# Exclude development files
-.mocharc.json
-tsconfig.json
-.eslintignore
-eslintrc.json
-
-# Exclude documentation except README
-!README.md
-!CHANGELOG.md
-!LICENSE
-
-# Include dist
-!dist/**/*
-
-# Exclude everything else
+# Exclude everything by default
 *
-!node_modules/
-!node_modules/**
 
-
-# .github
-docs
-# **/node_modules/**
-!dist/**/*.js
-!dist/**/*.d.ts
-!node_modules/@rifen/timescope-core/dist/**
-!node_modules/@rifen/timescope-core/package.json
-
-# Exclude monorepo sibling packages (commented out to include core)
-# ../../packages/core/**
-# ../../packages/nvim/**
-
-# Exclude monorepo root (commented out to include core)
-
-
-
-
-# Only include what's needed
+# Essential extension metadata files
 !package.json
 !README.md
 !CHANGELOG.md
 !LICENSE
+
+# Compiled extension output
 !dist/**
+
+# Source TypeScript files (optional, keep if needed for debugging)
 !src/**/*.ts
+
+# Only include the core runtime dependency
+!node_modules/@rifen/timescope-core/dist/**
+!node_modules/@rifen/timescope-core/package.json
