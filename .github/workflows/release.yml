@@ -60,6 +60,13 @@ jobs:
       - name: Build all packages
         run: pnpm -r run build
 
+      - name: Prepare core for bundling
+        run: |
+          rm -rf packages/vscode/node_modules/@rifen/timescope-core
+          mkdir -p packages/vscode/node_modules/@rifen
+          cp -r packages/core/dist packages/vscode/node_modules/@rifen/timescope-core
+          cp packages/core/package.json packages/vscode/node_modules/@rifen/timescope-core/
+
       - name: Package VS Code extension
         run: |
           cd packages/vscode
