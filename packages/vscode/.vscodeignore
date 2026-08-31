@@ -29,4 +29,4 @@
 ../../node_modules/**
 ../../pnpm-lock.yaml
 ../../.github/**
-../../core/.gitignore
+../core/.gitignore
