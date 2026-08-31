@@ -54,10 +54,23 @@ jobs:
       - name: Build all packages
         run: pnpm -r run build
 
+      - name: Prepare core for bundling
+        run: |
+          rm -rf packages/vscode/node_modules/@rifen/timescope-core
+          mkdir -p packages/vscode/node_modules/@rifen
+          cp -r packages/core/dist packages/vscode/node_modules/@rifen/timescope-core
+          cp packages/core/package.json packages/vscode/node_modules/@rifen/timescope-core/
+
       - name: Package VS Code extension
         run: |
           cd packages/vscode
-          npx vsce package --no-dependencies
+          npx vsce package
+
+      - name: Verify VSIX contents
+        run: |
+          VSIX=$(ls packages/vscode/*.vsix | head -n1)
+          echo "Checking $VSIX"
+          unzip -l "$VSIX" | grep -i "node_modules/@rifen/timescope-core/dist" || (echo "Core not bundled!" && exit 1)
 
       - name: Upload VSIX artifact
         uses: actions/upload-artifact@v7
