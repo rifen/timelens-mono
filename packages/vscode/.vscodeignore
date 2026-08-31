@@ -23,6 +23,7 @@
 
 # Exclude monorepo root files that could cause invalid relative paths
 ../../.git/**
+../../.gitignore
 ../../node_modules/**
 ../../pnpm-lock.yaml
 ../../.github/**
