@@ -32,3 +32,4 @@
 ../core/.gitignore
 ../core/dist/**
 ../core/**
+../nvim/**
