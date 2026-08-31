@@ -23,6 +23,8 @@ eslintrc.json
 
 # Exclude everything else
 *
+!node_modules/
+!node_modules/**
 !node_modules/**
 .gitignore
 .gitattributes
