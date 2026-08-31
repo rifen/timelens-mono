@@ -33,3 +33,4 @@
 ../core/dist/**
 ../core/**
 ../nvim/**
+../../pnpm-workspace.yaml
