@@ -9,28 +9,11 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20.x"
-          cache: "pnpm"
-
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build VS Code extension
-        run: pnpm --filter rifen-timescope run build
-
-      - name: Publish to Visual Studio Marketplace
-        env:
-          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-        run: |
-          cd packages/vscode
-          npx vsce publish --azure-tenantId $AZURE_TENANT_ID --azure-clientId $AZURE_CLIENT_ID --azure-clientSecret $AZURE_CLIENT_SECRET
+    - task: AzureCLI@2
+      displayName: 'Get identity details'
+      inputs:
+        azureSubscription: 6f187661-937d-4e0f-924f-4f90bcd65068
+        scriptType: pscore
+        scriptLocation: inlineScript
+        inlineScript: |
+          az rest -u https://app.vssps.visualstudio.com/_apis/profile/profiles/me --resource 499b84ac-1321-427f-aa17-267ca6975798
