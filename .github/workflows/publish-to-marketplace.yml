@@ -9,11 +9,11 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-    - task: AzureCLI@2
-      displayName: 'Get identity details'
-      inputs:
-        azureSubscription: 6f187661-937d-4e0f-924f-4f90bcd65068
-        scriptType: pscore
-        scriptLocation: inlineScript
-        inlineScript: |
-          az rest -u https://app.vssps.visualstudio.com/_apis/profile/profiles/me --resource 499b84ac-1321-427f-aa17-267ca6975798
+      - task: AzureCLI@2
+        displayName: 'Get identity details'
+        inputs:
+          azureSubscription: 6f187661-937d-4e0f-924f-4f90bcd65068
+          scriptType: pscore
+          scriptLocation: inlineScript
+          inlineScript: |
+            az rest -u https://app.vssps.visualstudio.com/_apis/profile/profiles/me --resource 499b84ac-1321-427f-aa17-267ca6975798
