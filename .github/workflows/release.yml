@@ -63,12 +63,12 @@ jobs:
       - name: Build VS Code extension (bundles core)
         run: |
           cd packages/vscode
-          npm run build
+          pnpm run build
 
       - name: Package VS Code extension
         run: |
           cd packages/vscode
-          npx @vscode/vsce package --no-dependencies --out timescope.vsix
+          npm run package
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -82,6 +82,6 @@ jobs:
         if: env.VSCE_PAT != ''
         run: |
           cd packages/vscode
-          npx @vscode/vsce publish --no-dependencies -p $VSCE_PAT
+          npm run publish -- -p $VSCE_PAT
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
