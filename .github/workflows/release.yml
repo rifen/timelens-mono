@@ -91,7 +91,9 @@ jobs:
       - name: Install staging dependencies
         run: |
           cd /tmp/timescope-vscode-staging
-          npm install
+          # Copy workspace config for allowBuilds
+          cp /home/runner/work/timescope/timescope/pnpm-workspace.yaml .
+          pnpm install
 
       - name: Package VS Code extension
         run: |
