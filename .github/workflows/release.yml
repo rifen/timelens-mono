@@ -27,7 +27,7 @@ jobs:
         uses: pnpm/action-setup@v6
 
       - name: Install dependencies
-        run: pnpm install --filter @rifen/timescope-core --allow-build-scripts=@vscode/vsce-sign
+        run: pnpm install --filter @rifen/timescope-core
 
       - name: Build core
         run: pnpm --filter @rifen/timescope-core run build
@@ -55,7 +55,7 @@ jobs:
         uses: pnpm/action-setup@v6
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile --allow-build-scripts=@vscode/vsce-sign
+        run: pnpm install --frozen-lockfile
 
       - name: Build all packages
         run: pnpm -r run build
