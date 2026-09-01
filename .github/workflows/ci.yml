@@ -94,6 +94,17 @@ jobs:
           cd /tmp/timescope-vscode-staging
           pnpm install --ignore-scripts --prod
 
+          # Strip devDependencies from the core package's package.json
+          # vsce runs `npm list --production` and fails if any declared devDependencies are missing
+          node -e "
+            const fs = require('fs');
+            const pkgPath = '/tmp/timescope-vscode-staging/node_modules/@rifen/timescope-core/package.json';
+            const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+            delete pkg.devDependencies;
+            delete pkg.scripts;
+            fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n');
+          "
+
       - name: Package VS Code extension
         run: |
           cd /tmp/timescope-vscode-staging
