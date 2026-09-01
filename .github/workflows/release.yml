@@ -85,13 +85,11 @@ jobs:
           # Copy extension folder for icon
           cp -r packages/vscode/extension /tmp/timescope-vscode-staging/
 
-          # Copy core runtime dependency (compiled JS only, no symlinks)
-          mkdir -p /tmp/timescope-vscode-staging/node_modules/@rifen/timescope-core
-          cp -r packages/core/dist /tmp/timescope-vscode-staging/node_modules/@rifen/timescope-core/
-          cp packages/core/package.json /tmp/timescope-vscode-staging/node_modules/@rifen/timescope-core/
-
-          # Fix package.json: replace workspace:* with file: reference for local core package
-          sed -i 's|"@rifen/timescope-core": "workspace:\*"|"@rifen/timescope-core": "file:./node_modules/@rifen/timescope-core"|' /tmp/timescope-vscode-staging/package.json
+          # Fix package.json: replace workspace:* with absolute file: reference to workspace core package
+          # This allows pnpm to properly install the core package from the workspace
+          sed -i 's|"@rifen/timescope-core": "workspace:\*"|"@rifen/timescope-core": "file:${{ github.workspace }}/packages/core"|' /tmp/timescope-vscode-staging/package.json
+        env:
+          GITHUB_WORKSPACE: ${{ github.workspace }}
 
       - name: Install staging dependencies
         run: |
