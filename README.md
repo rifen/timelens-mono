@@ -1,5 +1,7 @@
 # TimeScope
 
+<!-- CI trigger commit -->
+
 **Hover any integer duration → see human-readable time instantly.**
 
 TimeScope is a cross-editor tool that eliminates mental math by hovering over numeric durations and revealing their human-readable meaning.
