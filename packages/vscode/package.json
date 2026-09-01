@@ -161,8 +161,8 @@
     "test": "node ./test/runTest.js",
     "unit-test": "mocha --require ts-node/register test/*.test.ts",
     "lint": "eslint src --ext .ts --ignore-path .gitignore",
-    "package": "vsce package",
-    "publish": "vsce publish"
+    "package": "@vscode/vsce package",
+    "publish": "@vscode/vsce publish"
   },
   "commands": [
     {
@@ -194,7 +194,7 @@
     "mocha": "^10.8.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
-    "vsce": "^2.15.0"
+    "@vscode/vsce": "^3.0.0"
   },
   "icon": "extension/timescope.ico"
 }

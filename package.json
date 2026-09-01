@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "typescript": "^5.3.3",
-    "vsce": "^2.15.0"
+    "@vscode/vsce": "^3.0.0"
   },
   "engines": {
     "node": ">=20.0.0",
