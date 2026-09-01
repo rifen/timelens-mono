@@ -64,10 +64,3 @@ export interface ScanResult {
 export interface FileScanResult extends ScanResult {
   filePath: string;
 }
-
-export interface GCFOptions {
-  profile?: 'generic' | 'graph';
-  toolName?: string;
-  tokenBudget?: number;
-  formatOptions?: Partial<FormatOptions>;
-}

@@ -4,8 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { scanCode, detectDuration } from './detection';
 import { formatDurationFull } from './formatting';
-import { toGCF } from './gcf';
-import { ScanResult, TimeScopeSettings, DEFAULT_SETTINGS } from './types';
+import { type ScanResult, type TimeScopeSettings, DEFAULT_SETTINGS } from './types';
 
 const SUPPORTED_EXTENSIONS = new Set([
   '.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs',
@@ -20,7 +19,7 @@ const IGNORED_DIRS = new Set([
 
 function printHelp(): void {
   console.log(`
-TimeScope CLI - AI-native code duration detection & GCF compression
+TimeScope CLI - AI-native code duration detection
 
 Usage:
   timelens scan <file-or-dir> [options]
@@ -31,8 +30,7 @@ Commands:
   parse <expr>         Parse and evaluate a single duration expression or token
 
 Options:
-  --format=<format>    Output format: 'gcf' (default), 'json', or 'text'
-  --profile=<profile>  GCF profile: 'generic' (default) or 'graph'
+  --format=<format>    Output format: 'json' or 'text' (default: text)
   --unit=<unit>        Default unit: 'seconds', 'milliseconds', 'auto'
   --min=<number>       Minimum value filter
   --max=<number>       Maximum value filter
@@ -40,7 +38,7 @@ Options:
   -h, --help           Show this help message
 
 Examples:
-  timelens scan src/ --format=gcf
+  timelens scan src/ --format=json
   timelens scan config.yaml --format=text
   timelens parse "60 * 60 * 24"
   timelens parse "30000" --unit=milliseconds
@@ -50,21 +48,19 @@ Examples:
 function parseArgs(args: string[]): {
   command: string;
   target?: string;
-  format: 'gcf' | 'json' | 'text';
-  profile: 'generic' | 'graph';
+  format: 'json' | 'text';
   settings: Partial<TimeScopeSettings>;
 } {
   let command = 'help';
   let target: string | undefined;
-  let format: 'gcf' | 'json' | 'text' = 'gcf';
-  let profile: 'generic' | 'graph' = 'generic';
+  let format: 'json' | 'text' = 'text';
   const settings: Partial<TimeScopeSettings> = {};
 
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
 
     if (arg === '-h' || arg === '--help' || arg === 'help') {
-      return { command: 'help', format, profile, settings };
+      return { command: 'help', format, settings };
     }
 
     if (arg === 'scan' || arg === 'parse') {
@@ -76,19 +72,12 @@ function parseArgs(args: string[]): {
     }
 
     if (arg.startsWith('--format=')) {
-      const f = arg.split('=')[1] as 'gcf' | 'json' | 'text';
-      if (['gcf', 'json', 'text'].includes(f)) format = f;
+      const f = arg.split('=')[1] as 'json' | 'text';
+      if (['json', 'text'].includes(f)) format = f;
       continue;
     }
-    if (arg === '--gcf') { format = 'gcf'; continue; }
     if (arg === '--json') { format = 'json'; continue; }
     if (arg === '--text') { format = 'text'; continue; }
-
-    if (arg.startsWith('--profile=')) {
-      const p = arg.split('=')[1] as 'generic' | 'graph';
-      if (['generic', 'graph'].includes(p)) profile = p;
-      continue;
-    }
 
     if (arg.startsWith('--unit=')) {
       const u = arg.split('=')[1] as TimeScopeSettings['defaultUnit'];
@@ -117,7 +106,7 @@ function parseArgs(args: string[]): {
     }
   }
 
-  return { command, target, format, profile, settings };
+  return { command, target, format, settings };
 }
 
 function collectFiles(dirOrFile: string): string[] {
@@ -154,7 +143,7 @@ export function runCLI(): void {
     return;
   }
 
-  const { command, target, format, profile, settings } = parseArgs(args);
+  const { command, target, format, settings } = parseArgs(args);
 
   if (command === 'help' || !target) {
     printHelp();
@@ -181,19 +170,6 @@ export function runCLI(): void {
 
     if (format === 'json') {
       console.log(JSON.stringify({ ...detected, formatted, compact }, null, 2));
-    } else if (format === 'gcf') {
-      console.log(toGCF([{
-        token: target,
-        line: 1,
-        column: 1,
-        value: detected.value,
-        unit: detected.unit,
-        confidence: detected.confidence,
-        source: detected.source,
-        contextHint: detected.contextHint,
-        formatted: compact,
-        lineContext: target
-      }]));
     } else {
       console.log(`Value:      ${detected.value} ${detected.unit}`);
       console.log(`Formatted:  ${formatted} (${compact})`);
@@ -224,9 +200,7 @@ export function runCLI(): void {
       }
     }
 
-    if (format === 'gcf') {
-      console.log(toGCF(allResults, { profile, toolName: 'timelens_scan' }));
-    } else if (format === 'json') {
+    if (format === 'json') {
       console.log(JSON.stringify(allResults, null, 2));
     } else {
       let totalDetections = 0;

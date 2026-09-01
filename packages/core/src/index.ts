@@ -1,6 +1,5 @@
 export { detectDuration, scanCode } from './detection';
 export { toMilliseconds, formatDuration, formatDurationFull, evaluateExpression } from './formatting';
-export { toGCF, toGenericGCF, toGraphGCF } from './gcf';
 export {
   TimeScopeSettings,
   DetectedDuration,
@@ -8,6 +7,5 @@ export {
   ScanResult,
   FileScanResult,
   FormatOptions,
-  GCFOptions,
   DEFAULT_SETTINGS
 } from './types';

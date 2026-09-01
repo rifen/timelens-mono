@@ -41,7 +41,5 @@
     "ts-jest": "^29.4.12",
     "typescript": "^5.3.3"
   },
-  "dependencies": {
-    "@blackwell-systems/gcf": "^2.6.1"
-  }
+  "dependencies": {}
 }
