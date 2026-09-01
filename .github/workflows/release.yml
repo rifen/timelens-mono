@@ -60,76 +60,20 @@ jobs:
       - name: Build all packages
         run: pnpm -r run build
 
-      - name: Compile VS Code extension
+      - name: Build VS Code extension (bundles core)
         run: |
           cd packages/vscode
-          npm run compile
-
-      - name: Stage extension for packaging
-        run: |
-          # Create clean staging directory
-          rm -rf /tmp/timescope-vscode-staging
-          mkdir -p /tmp/timescope-vscode-staging
-
-          # Copy extension manifest and metadata
-          cp packages/vscode/package.json /tmp/timescope-vscode-staging/
-          cp packages/vscode/README.md /tmp/timescope-vscode-staging/
-          cp packages/vscode/CHANGELOG.md /tmp/timescope-vscode-staging/
-          cp packages/vscode/LICENSE /tmp/timescope-vscode-staging/
-          cp packages/vscode/.vscodeignore /tmp/timescope-vscode-staging/
-          cp packages/vscode/tsconfig.json /tmp/timescope-vscode-staging/
-
-          # Copy source and compiled extension (src needed for vsce prepublish compile step)
-          cp -r packages/vscode/src /tmp/timescope-vscode-staging/
-          cp -r packages/vscode/dist /tmp/timescope-vscode-staging/
-          # Copy extension folder for icon
-          cp -r packages/vscode/extension /tmp/timescope-vscode-staging/
-
-          # Fix package.json: replace workspace:* with absolute file: reference to workspace core package
-          # This allows pnpm to properly install the core package from the workspace
-          sed -i 's|"@rifen/timescope-core": "workspace:\*"|"@rifen/timescope-core": "file:${{ github.workspace }}/packages/core"|' /tmp/timescope-vscode-staging/package.json
-
-          # Remove vscode:prepublish script to prevent vsce from running tsc (we already compiled)
-          # This avoids needing devDependencies like @types/vscode in the staging install
-          sed -i 's|"vscode:prepublish": "npm run compile"|"vscode:prepublish": ""|' /tmp/timescope-vscode-staging/package.json
-        env:
-          GITHUB_WORKSPACE: ${{ github.workspace }}
-
-      - name: Install staging dependencies
-        run: |
-          cd /tmp/timescope-vscode-staging
-
-          # Ensure the file: reference is correct (though we won't run npm install)
-          sed -i 's|"@rifen/timescope-core": "file:[^"]*"|"@rifen/timescope-core": "file:${{ github.workspace }}/packages/core"|' /tmp/timescope-vscode-staging/package.json
-
-          # Manually add the core package without devDependencies
-          mkdir -p node_modules/@rifen/timescope-core
-          cp -r ../packages/core/dist node_modules/@rifen/timescope-core/
-          cat > node_modules/@rifen/timescope-core/package.json <<'EOF'
-          {
-            "name": "@rifen/timescope-core",
-            "version": "0.2.1",
-            "main": "dist/index.js",
-            "types": "dist/index.d.ts"
-          }
-          EOF
-          # No npm install needed – we have a flat node_modules for vsce
-        env:
-          GITHUB_WORKSPACE: ${{ github.workspace }}
+          npm run build
 
       - name: Package VS Code extension
         run: |
-          cd /tmp/timescope-vscode-staging
-          npx @vscode/vsce package --out timescope.vsix
-
-      - name: Verify VSIX contents
-        run: |
-          unzip -l /tmp/timescope-vscode-staging/timescope.vsix | grep -i "node_modules/@rifen/timescope-core/dist" || (echo "Core not bundled!" && exit 1)
+          cd packages/vscode
+          npx @vscode/vsce package --no-dependencies --out timescope.vsix
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: /tmp/timescope-vscode-staging/*.vsix
+          files: packages/vscode/*.vsix
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -137,7 +81,7 @@ jobs:
       - name: Publish to VS Code Marketplace
         if: env.VSCE_PAT != ''
         run: |
-          cd /tmp/timescope-vscode-staging
-          npx @vscode/vsce publish -p $VSCE_PAT
+          cd packages/vscode
+          npx @vscode/vsce publish --no-dependencies -p $VSCE_PAT
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
