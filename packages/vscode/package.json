@@ -38,6 +38,9 @@
     "url": "https://github.com/rifen/timescope/issues"
   },
   "homepage": "https://github.com/rifen/timescope#readme",
+  "vsce": {
+    "dependencies": false
+  },
   "dependencies": {
     "@rifen/timescope-core": "workspace:*"
   },
@@ -154,15 +157,16 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
+    "build": "npm run compile && mkdir -p dist/@rifen && cp -r ../core/dist dist/@rifen/timescope-core",
+    "vscode:prepublish": "npm run build",
     "pretest": "npm run compile && npm run lint",
     "test": "node ./test/runTest.js",
     "unit-test": "mocha --require ts-node/register test/*.test.ts",
     "lint": "eslint src --ext .ts --ignore-path .gitignore",
-    "package": "@vscode/vsce package",
-    "publish": "@vscode/vsce publish"
+    "package": "@vscode/vsce package --no-dependencies",
+    "publish": "@vscode/vsce publish --no-dependencies"
   },
   "commands": [
     {

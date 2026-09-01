@@ -4,7 +4,7 @@ import * as fs from "node:fs";
 import * as path from "path";
 import { scanCode, detectDuration } from "./detection";
 import { formatDurationFull } from "./formatting";
-import { type ScanResult, type TimeScopeSettings } from "./types";
+import type { ScanResult, TimeScopeSettings } from "./types";
 
 const SUPPORTED_EXTENSIONS = new Set([
   ".ts",

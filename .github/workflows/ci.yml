@@ -57,7 +57,7 @@ jobs:
       - name: Build VS Code extension (bundles core)
         run: |
           cd packages/vscode
-          npm run build
+          pnpm run build
 
       - name: Package VS Code extension
         run: |
