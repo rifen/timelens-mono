@@ -71,8 +71,10 @@ jobs:
           cp packages/vscode/CHANGELOG.md /tmp/timescope-vscode-staging/
           cp packages/vscode/LICENSE /tmp/timescope-vscode-staging/
           cp packages/vscode/.vscodeignore /tmp/timescope-vscode-staging/
+          cp packages/vscode/tsconfig.json /tmp/timescope-vscode-staging/
 
-          # Copy compiled extension
+          # Copy source and compiled extension (src needed for vsce prepublish compile step)
+          cp -r packages/vscode/src /tmp/timescope-vscode-staging/
           cp -r packages/vscode/dist /tmp/timescope-vscode-staging/
 
           # Copy core runtime dependency (compiled JS only, no symlinks)
