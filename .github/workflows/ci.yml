@@ -92,44 +92,16 @@ jobs:
       - name: Install staging dependencies
         run: |
           cd /tmp/timescope-vscode-staging
-          pnpm install --ignore-scripts --prod
 
-          # Strip devDependencies from ALL packages in node_modules
-          # vsce runs `npm list --production` and fails if ANY package declares missing devDependencies
-          node -e "
-            const fs = require('fs');
-            const path = require('path');
-            function stripDevDeps(dir) {
-              const pkgPath = path.join(dir, 'package.json');
-              if (fs.existsSync(pkgPath)) {
-                const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-                if (pkg.devDependencies) {
-                  delete pkg.devDependencies;
-                }
-                if (pkg.scripts) {
-                  delete pkg.scripts;
-                }
-                fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n');
-              }
-            }
-            // Walk all packages in node_modules
-            const modulesDir = '/tmp/timescope-vscode-staging/node_modules';
-            const entries = fs.readdirSync(modulesDir);
-            for (const entry of entries) {
-              const entryPath = path.join(modulesDir, entry);
-              if (fs.statSync(entryPath).isDirectory()) {
-                // Check for scoped packages (e.g., @rifen, @blackwell-systems)
-                if (entry.startsWith('@')) {
-                  const scopedEntries = fs.readdirSync(entryPath);
-                  for (const scopedEntry of scopedEntries) {
-                    stripDevDeps(path.join(entryPath, scopedEntry));
-                  }
-                } else {
-                  stripDevDeps(entryPath);
-                }
-              }
-            }
-          "
+          # Remove the workspace file: reference from package.json before npm install
+          # (npm doesn't understand file: protocol the same way pnpm does)
+          sed -i 's|"@rifen/timescope-core": "file:[^"]*"|"@rifen/timescope-core": "file:${{ github.workspace }}/packages/core"|' /tmp/timescope-vscode-staging/package.json
+
+          # Use npm install with --omit=dev to only install production dependencies
+          # npm creates a flat node_modules that vsce's npm list can validate correctly
+          npm install --omit=dev --ignore-scripts
+        env:
+          GITHUB_WORKSPACE: ${{ github.workspace }}
 
       - name: Package VS Code extension
         run: |
