@@ -160,7 +160,7 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "build": "npm run compile && mkdir -p dist/@rifen && cp -r ../core/dist dist/@rifen/timescope-core",
-    "vscode:prepublish": "npm run build",
+    "vscode:prepublish": "echo 'Skipping prepublish - build already run in CI'",
     "pretest": "npm run compile && npm run lint",
     "test": "node ./test/runTest.js",
     "unit-test": "mocha --require ts-node/register test/*.test.ts",
