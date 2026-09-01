@@ -13,19 +13,19 @@ jobs:
       matrix:
         node-version: [20.x, 22.x]
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7.4.0
 
       - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@v7.0.0
         with:
           node-version: ${{ matrix.node-version }}
           check-latest: true
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v6
+        uses: pnpm/action-setup@v6.0.0
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --ignore-scripts
 
       - name: Build all packages
         run: pnpm -r run build
@@ -37,19 +37,19 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7.4.0
 
       - name: Setup Node.js 22.x
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@v7.0.0
         with:
           node-version: 22.x
           check-latest: true
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v6
+        uses: pnpm/action-setup@v6.0.0
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --ignore-scripts
 
       - name: Build all packages
         run: pnpm -r run build
@@ -102,7 +102,7 @@ jobs:
           unzip -l /tmp/timescope-vscode-staging/timescope.vsix | grep -i "node_modules/@rifen/timescope-core/dist" || (echo "Core not bundled!" && exit 1)
 
       - name: Upload VSIX artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.7.0
         with:
           name: timescope-vscode
           path: /tmp/timescope-vscode-staging/*.vsix

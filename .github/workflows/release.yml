@@ -55,7 +55,7 @@ jobs:
         uses: pnpm/action-setup@v6
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --ignore-scripts
 
       - name: Build all packages
         run: pnpm -r run build
@@ -82,6 +82,8 @@ jobs:
           # Copy source and compiled extension (src needed for vsce prepublish compile step)
           cp -r packages/vscode/src /tmp/timescope-vscode-staging/
           cp -r packages/vscode/dist /tmp/timescope-vscode-staging/
+          # Copy extension folder for icon
+          cp -r packages/vscode/extension /tmp/timescope-vscode-staging/
 
           # Copy core runtime dependency (compiled JS only, no symlinks)
           mkdir -p /tmp/timescope-vscode-staging/node_modules/@rifen/timescope-core
