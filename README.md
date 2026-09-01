@@ -6,9 +6,7 @@
 
 TimeScope is a cross-editor tool that eliminates mental math by hovering over numeric durations and revealing their human-readable meaning.
 
-<p align="center">
-  <img src="timescope.jpeg" alt="TimeScope demo" width="600" />
-</p>
+![TimeScope demo](timescope.jpeg)
 
 ## Install
 

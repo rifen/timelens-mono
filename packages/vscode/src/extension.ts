@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { DurationHoverProvider } from './provider/durationHover';
-import { getSettings } from './config/settings';
+import { DurationHoverProvider } from './provider/durationHover.js';
+import { getSettings } from './config/settings.js';
 
 let outputChannel: vscode.OutputChannel | undefined;
 
@@ -8,7 +8,7 @@ function log(...args: unknown[]) {
   if (!outputChannel) {
     outputChannel = vscode.window.createOutputChannel('TimeScope');
   }
-  const message = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : String(arg)).join(' ');
+  const message = args.map(arg => String(arg)).join(' ');
   outputChannel.appendLine(`[TimeScope] ${message}`);
 }
 
