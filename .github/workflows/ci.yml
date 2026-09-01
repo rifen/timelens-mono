@@ -24,11 +24,8 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v6
 
-      - name: Approve builds
-        run: pnpm approve-builds @vscode/vsce-sign
-
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --allow-build-scripts=@vscode/vsce-sign
 
       - name: Build all packages
         run: pnpm -r run build
@@ -51,11 +48,8 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v6
 
-      - name: Approve builds
-        run: pnpm approve-builds @vscode/vsce-sign
-
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --allow-build-scripts=@vscode/vsce-sign
 
       - name: Build all packages
         run: pnpm -r run build

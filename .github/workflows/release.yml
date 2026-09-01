@@ -27,7 +27,7 @@ jobs:
         uses: pnpm/action-setup@v6
 
       - name: Install dependencies
-        run: pnpm install --filter @rifen/timescope-core
+        run: pnpm install --filter @rifen/timescope-core --allow-build-scripts=@vscode/vsce-sign
 
       - name: Build core
         run: pnpm --filter @rifen/timescope-core run build
@@ -55,7 +55,7 @@ jobs:
         uses: pnpm/action-setup@v6
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --allow-build-scripts=@vscode/vsce-sign
 
       - name: Build all packages
         run: pnpm -r run build
@@ -77,8 +77,10 @@ jobs:
           cp packages/vscode/CHANGELOG.md /tmp/timescope-vscode-staging/
           cp packages/vscode/LICENSE /tmp/timescope-vscode-staging/
           cp packages/vscode/.vscodeignore /tmp/timescope-vscode-staging/
+          cp packages/vscode/tsconfig.json /tmp/timescope-vscode-staging/
 
-          # Copy compiled extension
+          # Copy source and compiled extension (src needed for vsce prepublish compile step)
+          cp -r packages/vscode/src /tmp/timescope-vscode-staging/
           cp -r packages/vscode/dist /tmp/timescope-vscode-staging/
 
           # Copy core runtime dependency (compiled JS only, no symlinks)
@@ -86,10 +88,15 @@ jobs:
           cp -r packages/core/dist /tmp/timescope-vscode-staging/node_modules/@rifen/timescope-core/
           cp packages/core/package.json /tmp/timescope-vscode-staging/node_modules/@rifen/timescope-core/
 
+      - name: Install staging dependencies
+        run: |
+          cd /tmp/timescope-vscode-staging
+          npm install
+
       - name: Package VS Code extension
         run: |
           cd /tmp/timescope-vscode-staging
-          npx vsce package --out timescope.vsix
+          npx @vscode/vsce package --out timescope.vsix
 
       - name: Verify VSIX contents
         run: |
@@ -107,6 +114,6 @@ jobs:
         if: env.VSCE_PAT != ''
         run: |
           cd /tmp/timescope-vscode-staging
-          npx vsce publish -p $VSCE_PAT
+          npx @vscode/vsce publish -p $VSCE_PAT
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
