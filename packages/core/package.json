@@ -12,6 +12,7 @@
   ],
   "scripts": {
     "build": "tsc",
+    "prepare": "npm run build",
     "dev": "tsc -w",
     "cli": "node dist/cli.js",
     "test": "jest",
