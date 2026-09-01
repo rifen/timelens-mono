@@ -16,24 +16,3 @@
 # Only include the core runtime dependency
 !node_modules/@rifen/timescope-core/dist/**
 !node_modules/@rifen/timescope-core/package.json
-
-# Exclude monorepo sibling packages (keep excluded)
-# ../../packages/core/**
-# ../../packages/nvim/**
-
-# Exclude monorepo root files that could cause invalid relative paths
-../../.git/**
-../../.gitignore
-../../package.json
-../../tsconfig.json
-../../node_modules/**
-../../pnpm-lock.yaml
-../../.github/**
-../core/.gitignore
-../core/dist/**
-../core/**
-../nvim/**
-../../pnpm-workspace.yaml
-../../README.md
-../../skills/**
-../../timescope-icon.jpg
