@@ -82,6 +82,10 @@ jobs:
           # Fix package.json: replace workspace:* with absolute file: reference to workspace core package
           # This allows pnpm to properly install the core package from the workspace
           sed -i 's|"@rifen/timescope-core": "workspace:\*"|"@rifen/timescope-core": "file:${{ github.workspace }}/packages/core"|' /tmp/timescope-vscode-staging/package.json
+
+          # Remove vscode:prepublish script to prevent vsce from running tsc (we already compiled)
+          # This avoids needing devDependencies like @types/vscode in the staging install
+          sed -i 's|"vscode:prepublish": "npm run compile"|"vscode:prepublish": ""|' /tmp/timescope-vscode-staging/package.json
         env:
           GITHUB_WORKSPACE: ${{ github.workspace }}
 
