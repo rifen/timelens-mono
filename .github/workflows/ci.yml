@@ -93,13 +93,21 @@ jobs:
         run: |
           cd /tmp/timescope-vscode-staging
 
-          # Remove the workspace file: reference from package.json before npm install
-          # (npm doesn't understand file: protocol the same way pnpm does)
+          # Ensure the file: reference is correct (though we won't run npm install)
           sed -i 's|"@rifen/timescope-core": "file:[^"]*"|"@rifen/timescope-core": "file:${{ github.workspace }}/packages/core"|' /tmp/timescope-vscode-staging/package.json
 
-          # Use npm install with --omit=dev to only install production dependencies
-          # npm creates a flat node_modules that vsce's npm list can validate correctly
-          npm install --omit=dev --ignore-scripts
+          # Manually add the core package without devDependencies
+          mkdir -p node_modules/@rifen/timescope-core
+          cp -r ../packages/core/dist node_modules/@rifen/timescope-core/
+          cat > node_modules/@rifen/timescope-core/package.json <<'EOF'
+          {
+            "name": "@rifen/timescope-core",
+            "version": "0.2.1",
+            "main": "dist/index.js",
+            "types": "dist/index.d.ts"
+          }
+          EOF
+          # No npm install needed – we have a flat node_modules for vsce
         env:
           GITHUB_WORKSPACE: ${{ github.workspace }}
 
