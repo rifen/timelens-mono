@@ -76,18 +76,21 @@ jobs:
           # Copy source and compiled extension (src needed for vsce prepublish compile step)
           cp -r packages/vscode/src /tmp/timescope-vscode-staging/
           cp -r packages/vscode/dist /tmp/timescope-vscode-staging/
+          # Copy extension folder for icon
+          cp -r packages/vscode/extension /tmp/timescope-vscode-staging/
 
           # Copy core runtime dependency (compiled JS only, no symlinks)
           mkdir -p /tmp/timescope-vscode-staging/node_modules/@rifen/timescope-core
           cp -r packages/core/dist /tmp/timescope-vscode-staging/node_modules/@rifen/timescope-core/
           cp packages/core/package.json /tmp/timescope-vscode-staging/node_modules/@rifen/timescope-core/
 
+          # Fix package.json: replace workspace:* with file: reference for local core package
+          sed -i 's|"@rifen/timescope-core": "workspace:\*"|"@rifen/timescope-core": "file:./node_modules/@rifen/timescope-core"|' /tmp/timescope-vscode-staging/package.json
+
       - name: Install staging dependencies
         run: |
           cd /tmp/timescope-vscode-staging
-          # Copy workspace config for allowBuilds
-          cp /home/runner/work/timescope/timescope/pnpm-workspace.yaml .
-          pnpm install
+          pnpm install --ignore-scripts
 
       - name: Package VS Code extension
         run: |

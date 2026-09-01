@@ -16,3 +16,6 @@
 # Only include the core runtime dependency
 !node_modules/@rifen/timescope-core/dist/**
 !node_modules/@rifen/timescope-core/package.json
+
+# Include the extension icon
+!extension/timescope.ico
