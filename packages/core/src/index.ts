@@ -1,5 +1,10 @@
-export { detectDuration, scanCode } from './detection';
-export { toMilliseconds, formatDuration, formatDurationFull, evaluateExpression } from './formatting';
+export { detectDuration, scanCode } from "./detection";
+export {
+  toMilliseconds,
+  formatDuration,
+  formatDurationFull,
+  evaluateExpression,
+} from "./formatting";
 export {
   TimeScopeSettings,
   DetectedDuration,
@@ -7,5 +12,5 @@ export {
   ScanResult,
   FileScanResult,
   FormatOptions,
-  DEFAULT_SETTINGS
-} from './types';
+  DEFAULT_SETTINGS,
+} from "./types";

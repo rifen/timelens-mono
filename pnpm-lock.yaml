@@ -15,10 +15,6 @@ importers:
         version: 5.9.3
 
   packages/core:
-    dependencies:
-      "@blackwell-systems/gcf":
-        specifier: ^2.6.1
-        version: 2.6.1
     devDependencies:
       "@types/jest":
         specifier: ^29.5.14
@@ -483,13 +479,6 @@ packages:
       {
         integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==,
       }
-
-  "@blackwell-systems/gcf@2.6.1":
-    resolution:
-      {
-        integrity: sha512-Yxa26qsRbno3s9wCIF8ka8Kpdm5/Pc0kkGC2NFxhR4ghFD9sqZN6DufgsA87YeGr1zhEZn5xIpYq4whk/wcnxQ==,
-      }
-    hasBin: true
 
   "@colors/colors@1.6.0":
     resolution:
@@ -5275,8 +5264,6 @@ snapshots:
       "@babel/helper-validator-identifier": 7.29.7
 
   "@bcoe/v8-coverage@0.2.3": {}
-
-  "@blackwell-systems/gcf@2.6.1": {}
 
   "@colors/colors@1.6.0": {}
 

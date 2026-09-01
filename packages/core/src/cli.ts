@@ -1,20 +1,52 @@
 #!/usr/bin/env node
 
-import * as fs from 'fs';
-import * as path from 'path';
-import { scanCode, detectDuration } from './detection';
-import { formatDurationFull } from './formatting';
-import { type ScanResult, type TimeScopeSettings, DEFAULT_SETTINGS } from './types';
+import * as fs from "node:fs";
+import * as path from "path";
+import { scanCode, detectDuration } from "./detection";
+import { formatDurationFull } from "./formatting";
+import { type ScanResult, type TimeScopeSettings } from "./types";
 
 const SUPPORTED_EXTENSIONS = new Set([
-  '.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs',
-  '.py', '.go', '.rs', '.java', '.kt', '.swift', '.c', '.cpp', '.h',
-  '.json', '.yaml', '.yml', '.toml', '.ini', '.conf', '.env',
-  '.lua', '.sh', '.bash', '.zsh', '.rb', '.php'
+  ".ts",
+  ".tsx",
+  ".js",
+  ".jsx",
+  ".mjs",
+  ".cjs",
+  ".py",
+  ".go",
+  ".rs",
+  ".java",
+  ".kt",
+  ".swift",
+  ".c",
+  ".cpp",
+  ".h",
+  ".json",
+  ".yaml",
+  ".yml",
+  ".toml",
+  ".ini",
+  ".conf",
+  ".env",
+  ".lua",
+  ".sh",
+  ".bash",
+  ".zsh",
+  ".rb",
+  ".php",
 ]);
 
 const IGNORED_DIRS = new Set([
-  'node_modules', '.git', 'dist', 'build', 'out', 'target', '.next', '.cache', 'vendor'
+  "node_modules",
+  ".git",
+  "dist",
+  "build",
+  "out",
+  "target",
+  ".next",
+  ".cache",
+  "vendor",
 ]);
 
 function printHelp(): void {
@@ -48,60 +80,66 @@ Examples:
 function parseArgs(args: string[]): {
   command: string;
   target?: string;
-  format: 'json' | 'text';
+  format: "json" | "text";
   settings: Partial<TimeScopeSettings>;
 } {
-  let command = 'help';
+  let command = "help";
   let target: string | undefined;
-  let format: 'json' | 'text' = 'text';
+  let format: "json" | "text" = "text";
   const settings: Partial<TimeScopeSettings> = {};
 
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
 
-    if (arg === '-h' || arg === '--help' || arg === 'help') {
-      return { command: 'help', format, settings };
+    if (arg === "-h" || arg === "--help" || arg === "help") {
+      return { command: "help", format, settings };
     }
 
-    if (arg === 'scan' || arg === 'parse') {
+    if (arg === "scan" || arg === "parse") {
       command = arg;
-      if (i + 1 < args.length && !args[i + 1].startsWith('-')) {
+      if (i + 1 < args.length && !args[i + 1].startsWith("-")) {
         target = args[++i];
       }
       continue;
     }
 
-    if (arg.startsWith('--format=')) {
-      const f = arg.split('=')[1] as 'json' | 'text';
-      if (['json', 'text'].includes(f)) format = f;
+    if (arg.startsWith("--format=")) {
+      const f = arg.split("=")[1] as "json" | "text";
+      if (["json", "text"].includes(f)) format = f;
       continue;
     }
-    if (arg === '--json') { format = 'json'; continue; }
-    if (arg === '--text') { format = 'text'; continue; }
+    if (arg === "--json") {
+      format = "json";
+      continue;
+    }
+    if (arg === "--text") {
+      format = "text";
+      continue;
+    }
 
-    if (arg.startsWith('--unit=')) {
-      const u = arg.split('=')[1] as TimeScopeSettings['defaultUnit'];
+    if (arg.startsWith("--unit=")) {
+      const u = arg.split("=")[1] as TimeScopeSettings["defaultUnit"];
       settings.defaultUnit = u;
       continue;
     }
 
-    if (arg.startsWith('--min=')) {
-      settings.minValue = Number(arg.split('=')[1]);
+    if (arg.startsWith("--min=")) {
+      settings.minValue = Number(arg.split("=")[1]);
       continue;
     }
 
-    if (arg.startsWith('--max=')) {
-      settings.maxValue = Number(arg.split('=')[1]);
+    if (arg.startsWith("--max=")) {
+      settings.maxValue = Number(arg.split("=")[1]);
       continue;
     }
 
-    if (arg === '--no-context') {
+    if (arg === "--no-context") {
       settings.contextClues = false;
       continue;
     }
 
     // Positional target fallback
-    if (!target && !arg.startsWith('-')) {
+    if (!target && !arg.startsWith("-")) {
       target = arg;
     }
   }
@@ -119,7 +157,7 @@ function collectFiles(dirOrFile: string): string[] {
   function walk(dir: string) {
     const entries = fs.readdirSync(dir, { withFileTypes: true });
     for (const entry of entries) {
-      if (IGNORED_DIRS.has(entry.name) || entry.name.startsWith('.')) continue;
+      if (IGNORED_DIRS.has(entry.name) || entry.name.startsWith(".")) continue;
       const fullPath = path.join(dir, entry.name);
       if (entry.isDirectory()) {
         walk(fullPath);
@@ -145,12 +183,12 @@ export function runCLI(): void {
 
   const { command, target, format, settings } = parseArgs(args);
 
-  if (command === 'help' || !target) {
+  if (command === "help" || !target) {
     printHelp();
     return;
   }
 
-  if (command === 'parse') {
+  if (command === "parse") {
     const detected = detectDuration(target, target, settings);
     if (!detected) {
       console.error(`Could not detect a valid duration in: "${target}"`);
@@ -158,28 +196,31 @@ export function runCLI(): void {
     }
 
     const formatted = formatDurationFull(detected.value, detected.unit, {
-      format: 'verbose',
+      format: "verbose",
       showBreakdown: true,
-      showUnitLabel: true
+      showUnitLabel: true,
     });
     const compact = formatDurationFull(detected.value, detected.unit, {
-      format: 'compact',
+      format: "compact",
       showBreakdown: true,
-      showUnitLabel: true
+      showUnitLabel: true,
     });
 
-    if (format === 'json') {
+    if (format === "json") {
       console.log(JSON.stringify({ ...detected, formatted, compact }, null, 2));
     } else {
       console.log(`Value:      ${detected.value} ${detected.unit}`);
       console.log(`Formatted:  ${formatted} (${compact})`);
-      console.log(`Confidence: ${(detected.confidence * 100).toFixed(0)}% (${detected.source})`);
-      if (detected.contextHint) console.log(`Hint:       ${detected.contextHint}`);
+      console.log(
+        `Confidence: ${(detected.confidence * 100).toFixed(0)}% (${detected.source})`,
+      );
+      if (detected.contextHint)
+        console.log(`Hint:       ${detected.contextHint}`);
     }
     return;
   }
 
-  if (command === 'scan') {
+  if (command === "scan") {
     if (!fs.existsSync(target)) {
       console.error(`Error: Path does not exist: ${target}`);
       process.exit(1);
@@ -190,29 +231,33 @@ export function runCLI(): void {
 
     for (const file of files) {
       try {
-        const content = fs.readFileSync(file, 'utf-8');
+        const content = fs.readFileSync(file, "utf-8");
         const scan = scanCode(content, file, settings);
         if (scan.items.length > 0) {
           allResults.push(scan);
         }
-      } catch (err) {
+      } catch (_) {
         // Skip unreadable files
       }
     }
 
-    if (format === 'json') {
+    if (format === "json") {
       console.log(JSON.stringify(allResults, null, 2));
     } else {
       let totalDetections = 0;
       for (const res of allResults) {
         console.log(`\n📄 ${res.filePath} (${res.items.length} durations):`);
         for (const item of res.items) {
-          const id = item.identifier ? `[${item.identifier}] ` : '';
-          console.log(`  Line ${item.line}:${item.column} -> ${id}"${item.token}" = ${item.formatted} (${item.unit}, ${(item.confidence * 100).toFixed(0)}% conf)`);
+          const id = item.identifier ? `[${item.identifier}] ` : "";
+          console.log(
+            `  Line ${item.line}:${item.column} -> ${id}"${item.token}" = ${item.formatted} (${item.unit}, ${(item.confidence * 100).toFixed(0)}% conf)`,
+          );
         }
         totalDetections += res.items.length;
       }
-      console.log(`\nScan completed: ${totalDetections} durations found across ${allResults.length} files.`);
+      console.log(
+        `\nScan completed: ${totalDetections} durations found across ${allResults.length} files.`,
+      );
     }
   }
 }
