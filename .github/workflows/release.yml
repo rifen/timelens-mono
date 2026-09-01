@@ -60,22 +60,27 @@ jobs:
       - name: Build all packages
         run: pnpm -r run build
 
+      - name: Compile VS Code extension
+        run: |
+          cd packages/vscode
+          npm run compile
+
       - name: Stage extension for packaging
         run: |
           # Create clean staging directory
           rm -rf /tmp/timescope-vscode-staging
           mkdir -p /tmp/timescope-vscode-staging
-          
+
           # Copy extension manifest and metadata
           cp packages/vscode/package.json /tmp/timescope-vscode-staging/
           cp packages/vscode/README.md /tmp/timescope-vscode-staging/
           cp packages/vscode/CHANGELOG.md /tmp/timescope-vscode-staging/
           cp packages/vscode/LICENSE /tmp/timescope-vscode-staging/
           cp packages/vscode/.vscodeignore /tmp/timescope-vscode-staging/
-          
+
           # Copy compiled extension
           cp -r packages/vscode/dist /tmp/timescope-vscode-staging/
-          
+
           # Copy core runtime dependency (compiled JS only, no symlinks)
           mkdir -p /tmp/timescope-vscode-staging/node_modules/@rifen/timescope-core
           cp -r packages/core/dist /tmp/timescope-vscode-staging/node_modules/@rifen/timescope-core/
