@@ -88,7 +88,7 @@ jobs:
       - name: Install staging dependencies
         run: |
           cd /tmp/timescope-vscode-staging
-          pnpm install --ignore-scripts
+          pnpm install --ignore-scripts --prod
 
       - name: Package VS Code extension
         run: |
