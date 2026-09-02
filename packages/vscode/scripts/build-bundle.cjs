@@ -15,6 +15,11 @@ const rootNodeModulesDir = path.resolve(
 console.log("Bundling core into VSIX...");
 
 // Ensure target directories exist
+// Clean any previous bundled core copies
+fs.rmSync(targetDir, { recursive: true, force: true });
+fs.rmSync(nodeModulesDir, { recursive: true, force: true });
+fs.rmSync(rootNodeModulesDir, { recursive: true, force: true });
+// Recreate empty directories
 fs.mkdirSync(targetDir, { recursive: true });
 fs.mkdirSync(nodeModulesDir, { recursive: true });
 fs.mkdirSync(rootNodeModulesDir, { recursive: true });
@@ -23,6 +28,10 @@ fs.mkdirSync(rootNodeModulesDir, { recursive: true });
 function copyRecursive(src, dest) {
   const entries = fs.readdirSync(src, { withFileTypes: true });
   for (const entry of entries) {
+    // Skip the GCF folder – it is no longer part of the public runtime API
+    if (entry.isDirectory() && entry.name === "gcf") {
+      continue;
+    }
     const srcPath = path.join(src, entry.name);
     const destPath = path.join(dest, entry.name);
     if (entry.isDirectory()) {
