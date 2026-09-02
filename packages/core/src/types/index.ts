@@ -27,7 +27,7 @@ export const DEFAULT_SETTINGS: TimeScopeSettings = {
     "^0x[0-9a-f]+$",
     "^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$",
     "^\\d{4}-\\d{2}-\\d{2}$",
-    "^\\d{10,}$",
+    "^\\d{1,3}(?:\\.\\d{1,3}){3}$",
   ],
   keywords: [
     "timeout",

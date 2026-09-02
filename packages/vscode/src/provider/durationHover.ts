@@ -153,9 +153,27 @@ export class DurationHoverProvider implements vscode.HoverProvider {
     let start = charPos;
     let end = charPos;
 
-    for (; start > 0 && /[\w.$*]/.test(line[start - 1]); start--);
+    // Skip leading keywords (const, let, var, etc.) when expanding word range
+    const keywordPattern =
+      /\b(const|let|var|function|async|await|return|if|else|for|while|switch|case|default|break|continue|try|catch|finally|throw|new|typeof|instanceof|delete|void|yield)\b/;
 
-    for (; end < line.length && /[\w.$*]/.test(line[end]); end++);
+    for (; start > 0 && /[\w.$*]/.test(line[start - 1]); start--) {
+      // Check if we've hit a keyword boundary
+      const beforeChar = line[start - 1];
+      if (!/[\w$*]/.test(beforeChar)) break;
+    }
+
+    for (; end < line.length && /[\w.$*]/.test(line[end]); end++) {
+      // Check if we've hit a keyword boundary
+      const afterChar = line[end];
+      if (!/[\w$*]/.test(afterChar)) break;
+    }
+
+    // If the resulting word is a keyword, return null to force expression matching
+    const word = line.slice(start, end);
+    if (keywordPattern.test(word)) {
+      return null;
+    }
 
     if (start === end) return null;
     return { start, end };
