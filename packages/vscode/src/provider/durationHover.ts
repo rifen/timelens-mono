@@ -153,13 +153,9 @@ export class DurationHoverProvider implements vscode.HoverProvider {
     let start = charPos;
     let end = charPos;
 
-    while (start > 0 && /[\w.$*]/.test(line[start - 1])) {
-      start--;
-    }
+    for (; start > 0 && /[\w.$*]/.test(line[start - 1]); start--);
 
-    while (end < line.length && /[\w.$*]/.test(line[end])) {
-      end++;
-    }
+    for (; end < line.length && /[\w.$*]/.test(line[end]); end++);
 
     if (start === end) return null;
     return { start, end };
@@ -175,11 +171,11 @@ export class DurationHoverProvider implements vscode.HoverProvider {
     let start = wordStart;
     let end = wordEnd;
 
-    while (start > 0) {
+    for (; start > 0; ) {
       const char = line[start - 1];
       if (/\s/.test(char)) {
         let i = start - 1;
-        while (i >= 0 && /\s/.test(line[i])) i--;
+        for (; i >= 0 && /\s/.test(line[i]); i--);
         if (i >= 0 && operators.test(line[i])) {
           start = i + 1;
           continue;
@@ -193,11 +189,11 @@ export class DurationHoverProvider implements vscode.HoverProvider {
       break;
     }
 
-    while (end < line.length) {
+    for (; end < line.length; ) {
       const char = line[end];
       if (/\s/.test(char)) {
         let i = end;
-        while (i < line.length && /\s/.test(line[i])) i++;
+        for (; i < line.length && /\s/.test(line[i]); i++);
         if (i < line.length && operators.test(line[i])) {
           end = i;
           continue;
