@@ -66,6 +66,9 @@ jobs:
   publish-vscode:
     runs-on: ubuntu-latest
     needs: publish-core
+    env:
+      AZURE_CLIENT_ID: "25fc354e-62e5-4c49-94a4-504bdbc8fcf6"
+      AZURE_TENANT_ID: "c9318c73-07d0-475c-8bb5-81872494e6e5"
     steps:
       - uses: actions/checkout@v7
         with:
