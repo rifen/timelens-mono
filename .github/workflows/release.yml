@@ -69,6 +69,9 @@ jobs:
     env:
       AZURE_CLIENT_ID: "25fc354e-62e5-4c49-94a4-504bdbc8fcf6"
       AZURE_TENANT_ID: "c9318c73-07d0-475c-8bb5-81872494e6e5"
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v7
         with:
@@ -121,15 +124,12 @@ jobs:
           cd packages/vscode
           npx @vscode/vsce package --no-dependencies --out timescope.vsix
 
-      - name: Azure login (OIDC)
+      - name: Azure login (client secret)
         uses: azure/login@v2
         with:
-          client-id: ${{ env.AZURE_CLIENT_ID }}
-          tenant-id: ${{ env.AZURE_TENANT_ID }}
+          creds: ${{ secrets.AZURE_CLIENT_SECRET }}
           allow-no-subscriptions: true
-          # subscription-id is optional for marketplace publishing
-          # subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
-      - name: Publish to VS Code Marketplace (OIDC)
+      - name: Publish to VS Code Marketplace
         run: |
           cd packages/vscode
-          npx @vscode/vsce publish --azure-credential --no-dependencies
+          npx @vscode/vsce publish --no-dependencies
