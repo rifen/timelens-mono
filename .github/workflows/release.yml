@@ -96,10 +96,13 @@ jobs:
           echo "Tag version: $TAG_VERSION"
 
           # Check if tag version already exists on marketplace
-          if npx @vscode/vsce show rifen.rifen-timescope@$TAG_VERSION version 2>/dev/null; then
+          # vsce show returns 0 even when not found, so check output
+          OUTPUT=$(npx @vscode/vsce show rifen.rifen-timescope@$TAG_VERSION version 2>&1 || true)
+          if echo "$OUTPUT" | grep -q "^$TAG_VERSION$"; then
             echo "ERROR: Version $TAG_VERSION already exists on marketplace. Use a new tag."
             exit 1
           fi
+          echo "vsce output: $OUTPUT"
 
           NEW_VERSION="$TAG_VERSION"
           echo "Publishing version: $NEW_VERSION"
