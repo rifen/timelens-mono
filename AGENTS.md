@@ -6,6 +6,16 @@ This document captures hard-won knowledge about the CI/CD pipeline, publishing w
 
 ## 🔑 Critical Invariants (Do Not Break)
 
+### Publishing Approach
+
+- Automated VS Code Marketplace publishing is **disabled**.
+- The repository only publishes the **core package** to npm via CI.
+- VSIX packaging and Marketplace publishing must be performed **manually** (e.g., `npm run package` and `npm run publish` with a PAT).
+- Reason: Trusted Publishing (OIDC) requires an Azure AD‑backed organization, which is not available for a personal publisher. Using it would require Microsoft support and adds complexity.
+- Keeping publishing manual avoids failed CI runs, unnecessary secret management, and future confusion.
+- This note is permanent to ensure future contributors do not re‑add automated Marketplace publishing.
+
+
 ### 1. VS Code Extension Must Have Zero Runtime Dependencies
 
 - **`"vsce": { "dependencies": false }`** in `packages/vscode/package.json`
