@@ -28,7 +28,7 @@ jobs:
         uses: pnpm/action-setup@v6
 
       - name: Install dependencies
-        run: pnpm install --filter @rifen/timescope-core
+        run: pnpm install --filter @rifen/timescope-core --ignore-scripts --frozen-lockfile
 
       - name: Build core
         run: pnpm --filter @rifen/timescope-core run build
