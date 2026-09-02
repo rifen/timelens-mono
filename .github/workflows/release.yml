@@ -23,6 +23,8 @@ jobs:
           node-version: 22.x
           check-latest: true
           registry-url: "https://registry.npmjs.org"
+      - name: Upgrade npm to latest
+        run: npm install -g npm@latest
 
       - name: Install pnpm
         uses: pnpm/action-setup@v6
