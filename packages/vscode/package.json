@@ -159,7 +159,7 @@
   "scripts": {
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "build": "npm run compile && mkdir -p dist/@rifen && cp -r ../core/dist dist/@rifen/timescope-core",
+    "build": "npm run compile && node ./scripts/build-bundle.cjs",
     "vscode:prepublish": "echo 'Skipping prepublish - build already run in CI'",
     "pretest": "npm run compile && npm run lint",
     "test": "node ./test/runTest.js",

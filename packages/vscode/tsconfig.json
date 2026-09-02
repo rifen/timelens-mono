@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@rifen/timescope-core": ["../core/dist"]
+      "@rifen/timescope-core": ["../core/dist/index.d.ts"]
     },
     "module": "commonjs",
     "target": "ES2021",

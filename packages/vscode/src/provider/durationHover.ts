@@ -117,7 +117,7 @@ export class DurationHoverProvider implements vscode.HoverProvider {
       return null;
     }
 
-    const word = line.substring(wordRange.start, wordRange.end);
+    const word = line.slice(wordRange.start, wordRange.end);
     this.log("word range", wordRange, word);
 
     const expressionMatch = this.findContainingExpression(
@@ -211,7 +211,7 @@ export class DurationHoverProvider implements vscode.HoverProvider {
       break;
     }
 
-    const expression = line.substring(start, end);
+    const expression = line.slice(start, end);
     if (/[+\-*/]/.test(expression)) {
       return { expression, start, end };
     }

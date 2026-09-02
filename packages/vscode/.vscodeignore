@@ -7,13 +7,13 @@
 !CHANGELOG.md
 !LICENSE
 
-# Compiled extension output
+# Compiled extension output (including bundled core)
 !dist/**
+# Explicitly include node_modules inside dist (VS Code defaults exclude node_modules)
+!dist/node_modules/**
 
 # Source TypeScript files (optional, keep if needed for debugging)
 !src/**/*.ts
-
-
 
 # Include the extension icon
 !extension/timescope.ico
