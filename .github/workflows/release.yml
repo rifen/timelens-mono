@@ -132,4 +132,4 @@ jobs:
       - name: Publish to VS Code Marketplace
         run: |
           cd packages/vscode
-          npx @vscode/vsce publish --no-dependencies
+          npx @vscode/vsce publish --azure-credential --no-dependencies
