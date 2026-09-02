@@ -126,9 +126,9 @@ jobs:
         with:
           client-id: ${{ env.AZURE_CLIENT_ID }}
           tenant-id: ${{ env.AZURE_TENANT_ID }}
+          allow-no-subscriptions: true
           # subscription-id is optional for marketplace publishing
           # subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
-
       - name: Publish to VS Code Marketplace (OIDC)
         run: |
           cd packages/vscode
