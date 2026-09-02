@@ -124,10 +124,11 @@ jobs:
           cd packages/vscode
           npx @vscode/vsce package --no-dependencies --out timescope.vsix
 
-      - name: Azure login (client secret)
+      - name: Azure login (OIDC)
         uses: azure/login@v2
         with:
-          creds: ${{ secrets.AZURE_CLIENT_SECRET }}
+          client-id: ${{ env.AZURE_CLIENT_ID }}
+          tenant-id: ${{ env.AZURE_TENANT_ID }}
           allow-no-subscriptions: true
       - name: Publish to VS Code Marketplace
         run: |
