@@ -4,9 +4,6 @@ on:
   push:
     tags:
       - "v*.*.*"
-    branches:
-      - main
-      - master
 
 permissions:
   id-token: write
@@ -40,32 +37,19 @@ jobs:
       - name: Build core
         run: pnpm --filter @rifen/timescope-core run build
 
-      - name: Determine core version
+      - name: Determine core version from tag
         id: core-version
         run: |
-          # Get latest published version from npm
-          LATEST=$(npm view @rifen/timescope-core version 2>/dev/null || echo "0.0.0")
-          echo "Latest published: $LATEST"
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          echo "Tag version: $TAG_VERSION"
           
-          # If triggered by tag, use tag version; otherwise auto-increment patch
-          if [[ "${GITHUB_REF_NAME}" == v* ]]; then
-            TAG_VERSION="${GITHUB_REF_NAME#v}"
-            echo "Tag version: $TAG_VERSION"
-            
-            # Check if tag version already exists
-            if npm view @rifen/timescope-core@$TAG_VERSION version 2>/dev/null; then
-              echo "Version $TAG_VERSION already exists, incrementing patch..."
-              IFS='.' read -r MAJOR MINOR PATCH <<< "$LATEST"
-              NEW_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
-            else
-              NEW_VERSION="$TAG_VERSION"
-            fi
-          else
-            # Auto-increment patch from latest
-            IFS='.' read -r MAJOR MINOR PATCH <<< "$LATEST"
-            NEW_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
+          # Check if tag version already exists on npm
+          if npm view @rifen/timescope-core@$TAG_VERSION version 2>/dev/null; then
+            echo "ERROR: Version $TAG_VERSION already exists on npm. Use a new tag."
+            exit 1
           fi
           
+          NEW_VERSION="$TAG_VERSION"
           echo "Publishing version: $NEW_VERSION"
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "core_version=$NEW_VERSION" >> $GITHUB_OUTPUT
@@ -73,7 +57,7 @@ jobs:
       - name: Set core package version
         run: |
           cd packages/core
-          npm version "${{ steps.core-version.outputs.new_version }}" --no-git-tag-version --allow-same-version
+          npm version "${{ steps.core-version.outputs.new_version }}" --no-git-tag-version
 
       - name: Publish to npm
         run: npm publish --provenance --access public
@@ -105,38 +89,26 @@ jobs:
       - name: Build all packages
         run: pnpm -r run build
 
-      - name: Determine VS Code extension version
+      - name: Determine VS Code extension version from tag
         id: vscode-version
         run: |
-          # Get latest published version from marketplace
-          LATEST=$(npx @vscode/vsce show rifen.rifen-timescope version 2>/dev/null || echo "0.0.0")
-          echo "Latest published: $LATEST"
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          echo "Tag version: $TAG_VERSION"
           
-          # Use same version as core for consistency
-          CORE_VERSION="${{ needs.publish-core.outputs.core_version }}"
-          if [[ -n "$CORE_VERSION" ]]; then
-            NEW_VERSION="$CORE_VERSION"
-          elif [[ "${GITHUB_REF_NAME}" == v* ]]; then
-            TAG_VERSION="${GITHUB_REF_NAME#v}"
-            echo "Tag version: $TAG_VERSION"
-            if npx @vscode/vsce show rifen.rifen-timescope@$TAG_VERSION version 2>/dev/null; then
-              IFS='.' read -r MAJOR MINOR PATCH <<< "$LATEST"
-              NEW_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
-            else
-              NEW_VERSION="$TAG_VERSION"
-            fi
-          else
-            IFS='.' read -r MAJOR MINOR PATCH <<< "$LATEST"
-            NEW_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
+          # Check if tag version already exists on marketplace
+          if npx @vscode/vsce show rifen.rifen-timescope@$TAG_VERSION version 2>/dev/null; then
+            echo "ERROR: Version $TAG_VERSION already exists on marketplace. Use a new tag."
+            exit 1
           fi
           
+          NEW_VERSION="$TAG_VERSION"
           echo "Publishing version: $NEW_VERSION"
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
       - name: Set VS Code extension version
         run: |
           cd packages/vscode
-          npm version "${{ steps.vscode-version.outputs.new_version }}" --no-git-tag-version --allow-same-version
+          npm version "${{ steps.vscode-version.outputs.new_version }}" --no-git-tag-version
 
       - name: Package VS Code extension
         run: |
