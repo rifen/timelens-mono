@@ -57,7 +57,7 @@ jobs:
       - name: Set core package version
         run: |
           cd packages/core
-          npm version "${{ steps.core-version.outputs.new_version }}" --no-git-tag-version --allow-same-version
+          pnpm version "${{ steps.core-version.outputs.new_version }}" --no-git-tag-version --allow-same-version
 
       - name: Publish to npm
         run: npm publish --provenance --access public
@@ -108,7 +108,7 @@ jobs:
       - name: Set VS Code extension version
         run: |
           cd packages/vscode
-          npm version "${{ steps.vscode-version.outputs.new_version }}" --no-git-tag-version --allow-same-version
+          pnpm version "${{ steps.vscode-version.outputs.new_version }}" --no-git-tag-version --allow-same-version
 
       - name: Package VS Code extension
         run: |
