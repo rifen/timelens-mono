@@ -2,7 +2,45 @@
   "name": "@rifen/timescope-core",
   "version": "0.2.3",
   "description": "Shared detection and formatting logic for TimeScope (VS Code, Neovim, CLI)",
-  "main": "./index.js",
-  "types": "./index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "timescope": "dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
+    "dev": "tsc -w",
+    "cli": "node dist/cli.js",
+    "test": "jest",
+    "prepublishOnly": "npm run build"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "duration",
+    "timestamp",
+    "time",
+    "parsing",
+    "formatting"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rifen/timescope.git",
+    "directory": "packages/core"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/node": "^26.4.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.4.12",
+    "typescript": "^5.3.3"
+  },
   "dependencies": {}
 }
