@@ -1,6 +1,6 @@
 {
   "name": "@rifen/timescope-core",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Shared detection and formatting logic for TimeScope (VS Code, Neovim, CLI)",
   "main": "./index.js",
   "types": "./index.d.ts",
